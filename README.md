@@ -5,7 +5,7 @@
 - [Update dataset metadata](notebooks/update_dataset_metadata.ipynb)
 - Update column metadata
 - Add a Transform (Add points to dataset for choropleths, formatting year without comma if that's possible through transforms)
-- Upload a Spatial dataset as geojson (for spatial lens)
+- [Upload a Spatial dataset as geojson](notebooks/create_dataset_geojson.ipynb) (for spatial lens)
 - Exploratory analysis on new datasets with visualizations
 - Data Validation (date in expected bounds)
 - Automation
