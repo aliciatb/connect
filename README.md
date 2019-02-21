@@ -13,7 +13,7 @@
 - Data Validation (date in expected bounds)
 - Automation
 
-## R You Ready to Learn R Socrata
+## [R You Ready to Learn R Socrata](https://aliciatb.github.io/connect/)
 
 - [Read Data](https://aliciatb.github.io/connect/read_data.html)
 - Authentication for private datasets and updates (check if access token for reading data)

@@ -375,72 +375,108 @@ $(document).ready(function () {
 
 <div id="rsocrata" class="section level2">
 <h2>RSocrata</h2>
+<p>RSocrata is a library created by the City of Chicago to enable reading, writing and discovering data.</p>
 <ul>
-<li>Load up a Socrata dataset</li>
+<li>Read a Socrata dataset</li>
 <li>We can use the full URL</li>
 </ul>
-<pre class="r"><code>url &lt;- &quot;https://www.dallasopendata.com/Environment/Rainfall-Report/jus4-wys9&quot;
+<div id="fish-species-in-michigan" class="section level3">
+<h3>Fish Species in Michigan</h3>
+<p>Since this is a public dataset, we don’t need to pass user name, password or app token</p>
+<pre class="r"><code>url &lt;- &quot;https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa&quot;
+rsocrata_data &lt;- read.socrata(url, stringsAsFactors = TRUE)
+
+summary(rsocrata_data)</code></pre>
+<pre><code>##        id                   CommonName                 LatinName 
+##  Min.   : 1.00   Alewife         : 1   Osmerus mordax       : 2  
+##  1st Qu.: 9.75   Asian Carp      : 1                        : 1  
+##  Median :18.50   Atlantic Salmon,: 1   Acipenser fulvescens : 1  
+##  Mean   :18.50   Bluegill        : 1   Alosa pseudoharengus : 1  
+##  3rd Qu.:27.25   Bluntnose Minnow: 1   Ambloplites rupestris: 1  
+##  Max.   :36.00   Bowfin          : 1   Ameiurus nebulosus   : 1  
+##                  (Other)         :30   (Other)              :29  
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Narrative 
+##  Bighead Carp Can weigh up to 90 lbs and be nearly 5 feet in length Can consume up to 40% of their body weight daily Have a very large head and toothless mouth Adult fish are dark gray with dark blotches Eyes sit below the mouth Silver Carp Are smaller than the bighead Can weigh up to 60 lbs and exceed 3 feet in length Are light silver in color with a white belly Eyes sit below the mouth Grass carp Can be more than 5 feet long and weigh more than 80 lbs Have large scales that appear crosshatched Eyes sit even with the mouth Want more information on Asian carp? Check out our  official brochure  that provides all the details you need to know.: 1  
+##  Color: Adults are gold or brassy with red fins.  Markings: A lateral line runs along their sides and dips down in the middle of their body.  Length: 5-7 inches  Susceptible to VHS: No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                : 1  
+##  Color: Back, light olive, sides are silvery, underside is white.  Markings: Large eyes. Lateral line bordered by small dots. Body scales bordered by black gives a cross-hatched appearance.  Length: 2-3 inches  Susceptible to VHS: No                                                                                                                                                                                                                                                                                                                                                                                                                               : 1  
+##  Color: Olive green on back, silvery on bottom  Markings: Black horizontal stripe on side and black spot on tail.  Length: 2-3 inches  Susceptible to VHS: Yes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          : 1  
+##  Color: Olive-gray.  Markings: White on belly, diffuse dark blotch on dorsal fin, head is almost black on males during breeding.  Length: 2-3 inches  Susceptible to VHS: No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            : 1  
+##  Color: Purple and bronze sheen on sides  Markings: Dark spot at the base of the dorsal (back) fin. Tubercles on head and snout.  Length: 6-12 inches  Susceptible to VHS: No                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           : 1  
+##  (Other)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                :30  
+##                                                                                          Image   
+##                                                                                             : 1  
+##  https://data.michigan.gov/views/he9h-7fpa/files/-cvWmM8aQS9rKHCzHcFd4LalFPhk7Q4gyqZP4eAtaVU: 1  
+##  https://data.michigan.gov/views/he9h-7fpa/files/0qPXQi9IkOx0IB__qABAPQGdrFR6U8vnjAk11oGaPUI: 1  
+##  https://data.michigan.gov/views/he9h-7fpa/files/3dGn2KYI195imNFYgjcWvCoro2EscPs8cCFfHyb7XSc: 1  
+##  https://data.michigan.gov/views/he9h-7fpa/files/5pi1gcH2QPJAXGaeEQMW5p2wv9GbYagVKTDpd-c_pqw: 1  
+##  https://data.michigan.gov/views/he9h-7fpa/files/6Dickl2iUPGGZ9WcxNXt6ytduYZ5xbfIUyNXNVei2h0: 1  
+##  (Other)                                                                                    :30</code></pre>
+</div>
+<div id="stellar-sea-lion-count" class="section level3">
+<h3>Stellar Sea Lion Count</h3>
+<ul>
+<li>For private datasets, you do need to include user name and password.</li>
+<li>You can also create an API Key now on Socrata and pass the Key Id and Key Secret as user name and password respectively</li>
+</ul>
+<p><strong><em>Not really a private dataset, but made private for this example</em></strong></p>
+<pre class="r"><code>url &lt;- &quot;https://alicia.data.socrata.com/dataset/2016-Counts-of-Steller-Sea-Lions/td26-kbwz&quot;
+
 email &lt;- Sys.getenv(&quot;MY_SOCRATA_USERNAME&quot;)
 password &lt;- Sys.getenv(&quot;MY_SOCRATA_PASSWORD&quot;)
 rsocrata_data &lt;- read.socrata(url, app_token = NULL, email = email, password = password, stringsAsFactors = TRUE)
-
 summary(rsocrata_data)</code></pre>
-<pre><code>##    sensor_id                          station_name
-##  Min.   : 155   2255 Irving Blvd            : 1   
-##  1st Qu.:1755   5 Mile Creek at Lancaster   : 1   
-##  Median :4535   5 Mile Creek at Polk Street : 1   
-##  Mean   :4274   5 Mile Creek at Westmoreland: 1   
-##  3rd Qu.:6525   Ash Creek at Highland       : 1   
-##  Max.   :7955   Bachman Branch at Forest    : 1   
-##                 (Other)                     :55   
-##   Update.Time                       raw         X5_minutes  X15_minutes
-##  Min.   :2019-02-20 19:30:00   Min.   :  22   Min.   :0    Min.   :0   
-##  1st Qu.:2019-02-20 19:30:00   1st Qu.: 576   1st Qu.:0    1st Qu.:0   
-##  Median :2019-02-20 19:30:00   Median :1090   Median :0    Median :0   
-##  Mean   :2019-02-20 19:30:00   Mean   :1035   Mean   :0    Mean   :0   
-##  3rd Qu.:2019-02-20 19:30:00   3rd Qu.:1529   3rd Qu.:0    3rd Qu.:0   
-##  Max.   :2019-02-20 19:30:00   Max.   :2017   Max.   :0    Max.   :0   
-##                                                                        
-##   X30_minutes    X1_hour     X2_hours    X3_hours    X6_hours
-##  Min.   :0    Min.   :0   Min.   :0   Min.   :0   Min.   :0  
-##  1st Qu.:0    1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
-##  Median :0    Median :0   Median :0   Median :0   Median :0  
-##  Mean   :0    Mean   :0   Mean   :0   Mean   :0   Mean   :0  
-##  3rd Qu.:0    3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
-##  Max.   :0    Max.   :0   Max.   :0   Max.   :0   Max.   :0  
+<pre><code>##  cleanupsiteid                           contaminant   
+##  Min.   :    1   Petroleum-Other               : 6790  
+##  1st Qu.: 3015   Petroleum Products-Unspecified: 6199  
+##  Median : 5919   Petroleum-Gasoline            : 6011  
+##  Mean   : 6495   Petroleum-Diesel              : 4702  
+##  3rd Qu.:10006   Benzene                       : 4657  
+##  Max.   :14767   Metals Priority Pollutants    : 4350  
+##                  (Other)                       :20562  
+##       contaminantmedia                      contaminantstatus
+##  Air          : 1290   Below Cleanup Levels          : 5754  
+##  Bedrock      :    2   Confirmed Above Cleanup Levels:24035  
+##  Groundwater  :17172   Remediated                    : 2782  
+##  Sediment     :  818   Remediated-Above              :  376  
+##  Soil         :30730   Remediated-Below              : 7578  
+##  Surface Water: 3259   Suspected                     :12746  
 ##                                                              
-##    X12_hours             X1_day           X7_days          X30_days    
-##  Min.   :0.0000000   Min.   :0.00000   Min.   :0.1600   Min.   :0.670  
-##  1st Qu.:0.0000000   1st Qu.:0.00000   1st Qu.:0.3900   1st Qu.:1.020  
-##  Median :0.0000000   Median :0.00000   Median :0.4300   Median :1.140  
-##  Mean   :0.0006557   Mean   :0.00918   Mean   :0.4318   Mean   :1.224  
-##  3rd Qu.:0.0000000   3rd Qu.:0.00000   3rd Qu.:0.4700   3rd Qu.:1.340  
-##  Max.   :0.0400000   Max.   :0.08000   Max.   :0.8700   Max.   :2.240  
-##                                                                        
-##      today            this_month      past_year         latitude    
-##  Min.   :0.000000   Min.   :0.630   Min.   : 1.770   Min.   :32.64  
-##  1st Qu.:0.000000   1st Qu.:1.020   1st Qu.: 4.570   1st Qu.:32.74  
-##  Median :0.000000   Median :1.140   Median : 5.710   Median :32.80  
-##  Mean   :0.001311   Mean   :1.204   Mean   : 6.645   Mean   :32.81  
-##  3rd Qu.:0.000000   3rd Qu.:1.310   3rd Qu.: 9.450   3rd Qu.:32.87  
-##  Max.   :0.040000   Max.   :2.240   Max.   :12.060   Max.   :33.01  
-##                                                                     
-##    longitude                       Geo.Location
-##  Min.   :-96.95   (32.636533, -96.751894): 1   
-##  1st Qu.:-96.86   (32.64783, -96.814)    : 1   
-##  Median :-96.81   (32.666422, -96.952736): 1   
-##  Mean   :-96.81   (32.670286, -96.839867): 1   
-##  3rd Qu.:-96.76   (32.673986, -96.882931): 1   
-##  Max.   :-96.66   (32.680242, -96.785992): 1   
-##                   (Other)                :55</code></pre>
+##  facilitysiteid     lat_nad83harn   lon_nad83harn   
+##  Min.   :       1   Min.   :45.57   Min.   :-124.6  
+##  1st Qu.:    4559   1st Qu.:47.20   1st Qu.:-122.5  
+##  Median : 8282755   Median :47.55   Median :-122.3  
+##  Mean   :27148614   Mean   :47.44   Mean   :-122.0  
+##  3rd Qu.:53281319   3rd Qu.:47.73   3rd Qu.:-122.2  
+##  Max.   :99997002   Max.   :49.00   Max.   :-117.0  
+##                                                     
+##                        sitename    
+##  CENTRAL WATERFRONT        :  100  
+##  Coastal Construction      :   69  
+##  Lamb Property             :   69  
+##  RAVENNA LANDFILL UNION BAY:   64  
+##  EAST WATERWAY             :   60  
+##  HARBOR ISLAND             :   60  
+##  (Other)                   :52849  
+##                                         sitestatus   
+##  Cleanup Started                             :20401  
+##  No Further Action                           :20387  
+##  Awaiting Cleanup                            : 8312  
+##  Construction Complete-Performance Monitoring:  788  
+##  Cleanup Complete-Active O&amp;M/Monitoring      :  519  
+##  (Other)                                     :  593  
+##  NA's                                        : 2271</code></pre>
+</div>
 </div>
 <div id="readr" class="section level2">
 <h2>Readr</h2>
 <ul>
+<li>Can read public datasets using the CSV endpoint</li>
 <li>Preserves field names (rather than replacing spaces with periods)</li>
-<li>Faster</li>
+<li>Fast!</li>
 <li>Returns as Tibble (part of the tidyverse!)</li>
 </ul>
+<div id="dallas-rain-sensor-data" class="section level3">
+<h3>Dallas Rain Sensor Data</h3>
 <pre class="r"><code># public dataset example requiring no authentication
 readr_data &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
@@ -470,9 +506,9 @@ readr_data &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/jus4-wy
 ##  Min.   :0   Min.   :0.0000000   Min.   :0.00000   Min.   :0.1600  
 ##  1st Qu.:0   1st Qu.:0.0000000   1st Qu.:0.00000   1st Qu.:0.3900  
 ##  Median :0   Median :0.0000000   Median :0.00000   Median :0.4300  
-##  Mean   :0   Mean   :0.0006557   Mean   :0.00918   Mean   :0.4318  
+##  Mean   :0   Mean   :0.0006557   Mean   :0.00459   Mean   :0.4318  
 ##  3rd Qu.:0   3rd Qu.:0.0000000   3rd Qu.:0.00000   3rd Qu.:0.4700  
-##  Max.   :0   Max.   :0.0400000   Max.   :0.08000   Max.   :0.8700  
+##  Max.   :0   Max.   :0.0400000   Max.   :0.04000   Max.   :0.8700  
 ##     30_days          today            this_month      past_year     
 ##  Min.   :0.670   Min.   :0.000000   Min.   :0.630   Min.   : 1.770  
 ##  1st Qu.:1.020   1st Qu.:0.000000   1st Qu.:1.020   1st Qu.: 4.570  
@@ -488,10 +524,17 @@ readr_data &lt;- read_csv(&quot;https://www.dallasopendata.com/api/views/jus4-wy
 ##  3rd Qu.:32.87   3rd Qu.:-96.76                     
 ##  Max.   :33.01   Max.   :-96.66</code></pre>
 </div>
-<div id="httr-jsonlite-example" class="section level2">
-<h2>httr &amp; jsonlite example</h2>
+</div>
+<div id="httr" class="section level2">
+<h2>httr</h2>
+<ul>
+<li>R supports all HTTP requests methods</li>
+<li>Allows us to read private datasets using the CSV endpoint</li>
+</ul>
+<div id="stellar-sea-lion-count-again" class="section level3">
+<h3>Stellar Sea Lion Count (again)</h3>
 <pre class="r"><code>## HTTR + JSONLite + CSV Download Endpoint
-url_csv_download &lt;- &quot;https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD&quot;
+url_csv_download &lt;- &quot;https://alicia.data.socrata.com/api/views/td26-kbwz/rows.csv?accessType=DOWNLOAD&quot;
 socrata_user &lt;- Sys.getenv(&quot;MY_SOCRATA_USERNAME&quot;)
 socrata_password &lt;- Sys.getenv(&quot;MY_SOCRATA_PASSWORD&quot;)
 
@@ -501,8 +544,13 @@ response &lt;- GET(url = url_csv_download,
 response$status_code</code></pre>
 <pre><code>## [1] 200</code></pre>
 </div>
-<div id="httr-jsonlite-but-with-soda2-endpoint" class="section level2">
-<h2>httr &amp; jsonlite, but with SODA2 endpoint</h2>
+</div>
+<div id="httr-jsonlite-soda2" class="section level2">
+<h2>httr + jsonlite + soda2</h2>
+<ul>
+<li>Use the SODA2 endpoint</li>
+<li>JSONLite makes it easy to work with JSON source</li>
+</ul>
 <pre class="r"><code>## HTTR + JSONLite + SODA2 Endpoint
 
 # &gt;- Defaults to 1,000 records so need to query rowcount from https://data.seattle.gov/resource/28ny-9ts8.json?$select=count(*) or request reasonably large number of rows https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000 for full dataset

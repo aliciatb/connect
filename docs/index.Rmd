@@ -31,3 +31,12 @@ knitr::opts_chunk$set(echo = TRUE)
 - Visualize dataset using ggplot
 - Create a report in R markdown as a Word doc, PDF, and more!
 - Create a flex dashboard that can be published to the web 
+
+## Additional Resources
+
+- [Socrata API Keys](https://socrataapikeys.docs.apiary.io/)
+- [R Project](https://www.r-project.org/)
+- [RStudio](https://www.rstudio.com/products/rstudio/download/)
+- [RSocrata](https://github.com/Chicago/RSocrata)
+- [R for Data Science](https://r4ds.had.co.nz/)
+- [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/)

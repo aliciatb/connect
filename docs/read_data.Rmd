@@ -13,23 +13,46 @@ library(RSocrata)
 ```
 ## RSocrata
 
-- Load up a Socrata dataset
+RSocrata is a library created by the City of Chicago to enable reading, writing and discovering data.
+
+- Read a Socrata dataset
 - We can use the full URL
 
-```{r rSocrataExample, echo=TRUE, eval=T, fig.show = "hold"}
-url <- "https://www.dallasopendata.com/Environment/Rainfall-Report/jus4-wys9"
+### Fish Species in Michigan
+
+Since this is a public dataset, we don't need to pass user name, password or app token
+
+```{r rSocrataExample, echo=TRUE}
+url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
+rsocrata_data <- read.socrata(url, stringsAsFactors = TRUE)
+
+summary(rsocrata_data)
+```
+
+### Stellar Sea Lion Count
+
+- For private datasets, you do need to include user name and password.
+- You can also create an API Key now on Socrata and pass the Key Id and Key Secret as user name and password respectively
+
+***Not really a private dataset, but made private for this example***
+
+```{r SocrataExampleAuth, echo=T}
+url <- "https://alicia.data.socrata.com/dataset/2016-Counts-of-Steller-Sea-Lions/td26-kbwz"
+
 email <- Sys.getenv("MY_SOCRATA_USERNAME")
 password <- Sys.getenv("MY_SOCRATA_PASSWORD")
 rsocrata_data <- read.socrata(url, app_token = NULL, email = email, password = password, stringsAsFactors = TRUE)
-
 summary(rsocrata_data)
 ```
 
 ## Readr
 
+- Can read public datasets using the CSV endpoint
 - Preserves field names (rather than replacing spaces with periods)
-- Faster
+- Fast!
 - Returns as Tibble (part of the tidyverse!)
+
+### Dallas Rain Sensor Data
 
 ```{r rReadrExample, echo=TRUE}
 # public dataset example requiring no authentication
@@ -37,11 +60,16 @@ readr_data <- read_csv("https://www.dallasopendata.com/api/views/jus4-wys9/rows.
 summary(readr_data)
 ```
 
-## httr & jsonlite example
+## httr
+
+- R supports all HTTP requests methods
+- Allows us to read private datasets using the CSV endpoint
+
+### Stellar Sea Lion Count (again)
 
 ```{r rHttrJsonCSVExample, echo=TRUE, eval=T}
 ## HTTR + JSONLite + CSV Download Endpoint
-url_csv_download <- "https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD"
+url_csv_download <- "https://alicia.data.socrata.com/api/views/td26-kbwz/rows.csv?accessType=DOWNLOAD"
 socrata_user <- Sys.getenv("MY_SOCRATA_USERNAME")
 socrata_password <- Sys.getenv("MY_SOCRATA_PASSWORD")
 
@@ -51,7 +79,10 @@ response <- GET(url = url_csv_download,
 response$status_code
 ```
 
-## httr & jsonlite, but with SODA2 endpoint
+## httr + jsonlite + soda2
+
+- Use the SODA2 endpoint
+- JSONLite makes it easy to work with JSON source
 
 ```{r rHttrJsonExample, echo=TRUE, eval=T, error=F}
 ## HTTR + JSONLite + SODA2 Endpoint
