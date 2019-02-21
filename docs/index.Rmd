@@ -1,0 +1,33 @@
+---
+title: "R You Ready to Learn R Socrata?"
+author: "Justin, Ryan & Alicia"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Common Use Cases
+
+- Ad-hoc interactive performance dashboards
+- Internal report creation by non-technical users
+- Joining open data with internal databases
+- Reading and data from and to Socrata
+- Exploratory analysis and visualizations and predictive modeling
+
+## Why R and RStudio?
+
+- R is free and open source language with an active community
+- R makes it easy to create reproducible analysis documents as html, word, pdfs, slides and web shiny applications
+- Lots of useful packages to make data analysis delightful
+- RStudio is a robust and free tool that accelerates analysis for R
+
+## Agenda
+
+- [Read datasets from Socrata using RSocrata, readr and httr libraries](https://aliciatb.github.io/connect/read_data.html)
+- Inspect dataset with summary statistics
+- Exploratory analysis with the tidy verse
+- Visualize dataset using ggplot
+- Create a report in R markdown as a Word doc, PDF, and more!
+- Create a flex dashboard that can be published to the web 
