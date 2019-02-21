@@ -3,8 +3,8 @@ title: "Read Data"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r setup, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(httr)
 library(jsonlite)
@@ -25,7 +25,7 @@ RSocrata is a library created by the City of Chicago to enable reading, writing 
 - Since this is a public dataset, we don't need to pass user name, password or app token
 - Inspect first 5 rows of data with shortened narrative
 
-```{r rSocrataExample, echo=TRUE}
+```{r rSocrataExample}
 url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
 rsocrata_data <- read.socrata(url, stringsAsFactors = TRUE)
 
@@ -44,7 +44,7 @@ rsocrata_data %>%
 
 ***Not really a private dataset, but made private for this example***
 
-```{r SocrataExampleAuth, echo=T}
+```{r SocrataExampleAuth}
 url <- "https://alicia.data.socrata.com/dataset/2016-Counts-of-Steller-Sea-Lions/td26-kbwz"
 
 email <- Sys.getenv("MY_SOCRATA_USERNAME")
@@ -62,7 +62,7 @@ head(rsocrata_data)
 
 ### Dallas Rain Sensor Data
 
-```{r rReadrExample, echo=TRUE}
+```{r rReadrExample}
 # public dataset example requiring no authentication
 readr_data <- read_csv("https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD")
 head(readr_data)
@@ -75,7 +75,7 @@ head(readr_data)
 - JSONLite makes it easy to work with JSON source
 - Use the SODA2 endpoint (which defaults to 1,000 records, but can get rowcount and then set limit to itd)
 
-```{r rHttrJsonExample, echo=TRUE, eval=T, error=F}
+```{r rHttrJsonExample}
 ## HTTR + JSONLite + SODA2 Endpoint
 
 # >- Defaults to 1,000 records so need to query rowcount from https://data.seattle.gov/resource/28ny-9ts8.json?$select=count(*) or request reasonably large number of rows https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000 for full dataset
