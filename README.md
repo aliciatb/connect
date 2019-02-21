@@ -15,7 +15,7 @@
 
 ## R You Ready to Learn R Socrata
 
-- Read Data
+- [Read Data](https://aliciatb.github.io/connect/read_data.html)
 - Authentication for private datasets and updates (check if access token for reading data)
 - View summary statistics
 - Completeness of data
