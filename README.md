@@ -15,12 +15,9 @@
 
 ## [R You Ready to Learn R Socrata](https://aliciatb.github.io/connect/)
 
-- [Read Data](https://aliciatb.github.io/connect/read_data.html)
-- Authentication for private datasets and updates (check if access token for reading data)
-- View summary statistics
-- Completeness of data
-- Set datatypes (lubridate convert date)
-- Create a visualization with ggplot
-- Create reports by non-techncial users as pdfs
-- Create ad-hoc performance dashboards combining databases + open data sources with flex dashboards
-- Economic indicators data from open data
+- [Read datasets from Socrata using RSocrata, readr and httr libraries](https://aliciatb.github.io/connect/read_data.html)
+- Inspect dataset with summary statistics
+- Exploratory analysis with the tidy verse
+- Visualize dataset using ggplot
+- Create a report in R markdown as a Word doc, PDF, and more!
+- Create a flex dashboard that can be published to the web 
