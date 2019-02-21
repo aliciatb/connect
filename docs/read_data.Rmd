@@ -1,0 +1,72 @@
+---
+title: "Read Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(dplyr)
+library(httr)
+library(jsonlite)
+library(readr)
+library(RSocrata)
+```
+## RSocrata
+
+- Load up a Socrata dataset
+- We can use the full URL
+
+```{r rSocrataExample, echo=TRUE, eval=T, fig.show = "hold"}
+url <- "https://www.dallasopendata.com/Environment/Rainfall-Report/jus4-wys9"
+email <- Sys.getenv("MY_SOCRATA_USERNAME")
+password <- Sys.getenv("MY_SOCRATA_PASSWORD")
+rsocrata_data <- read.socrata(url, app_token = NULL, email = email, password = password, stringsAsFactors = TRUE)
+
+summary(rsocrata_data)
+```
+
+## Readr
+
+- Preserves field names (rather than replacing spaces with periods)
+- Faster
+- Returns as Tibble (part of the tidyverse!)
+
+```{r rReadrExample, echo=TRUE}
+# public dataset example requiring no authentication
+readr_data <- read_csv("https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD")
+summary(readr_data)
+```
+
+## httr & jsonlite example
+
+```{r rHttrJsonCSVExample, echo=TRUE, eval=T}
+## HTTR + JSONLite + CSV Download Endpoint
+url_csv_download <- "https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD"
+socrata_user <- Sys.getenv("MY_SOCRATA_USERNAME")
+socrata_password <- Sys.getenv("MY_SOCRATA_PASSWORD")
+
+response <- GET(url = url_csv_download,
+                            config = authenticate(socrata_user,socrata_password, type = "basic")
+                           )
+response$status_code
+```
+
+## httr & jsonlite, but with SODA2 endpoint
+
+```{r rHttrJsonExample, echo=TRUE, eval=T, error=F}
+## HTTR + JSONLite + SODA2 Endpoint
+
+# >- Defaults to 1,000 records so need to query rowcount from https://data.seattle.gov/resource/28ny-9ts8.json?$select=count(*) or request reasonably large number of rows https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000 for full dataset
+
+url_soda2_json <- "https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000"
+socrata_user <- Sys.getenv("MY_SOCRATA_USERNAME")
+socrata_password <- Sys.getenv("MY_SOCRATA_PASSWORD")
+
+response <- GET(url = url_soda2_json,
+                      config = authenticate(socrata_user,socrata_password, type = "basic")
+                ) %>% 
+            content("text") %>% 
+            fromJSON()
+
+head(response)
+```
