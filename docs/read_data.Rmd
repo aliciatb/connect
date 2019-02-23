@@ -47,14 +47,14 @@ rsocrata_data %>%
 ***Not really a private dataset, but made private for this example***
 
 ```{r SocrataExampleAuth}
-url <- "https://alicia.data.socrata.com/dataset/2016-Counts-of-Steller-Sea-Lions/td26-kbwz"
+url <- "https://alicia.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/qaj3-k28x"
 
 email <- Sys.getenv("MY_SOCRATA_USERNAME")
 password <- Sys.getenv("MY_SOCRATA_PASSWORD")
 rsocrata_data <- read.socrata(url, app_token = NULL, email = email, password = password, stringsAsFactors = TRUE)
 
 rsocrata_data %>%
-  top_n(10, cleanupsiteid) %>%
+  top_n(10, Site.Name) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
