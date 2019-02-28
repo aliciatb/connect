@@ -67,12 +67,24 @@ Create the same chart, but showing the count of *Pups* on the y-axis.
 Reading in the Trees from Edmonton's Open Data site ()
 
 ```{r edmonton trees}
-url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=50000"
+url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=10000"  ## Just 10,000 records to make things a little faster
 trees <- read.socrata(url)
 ```
 
+## Are larger trees in better or worse condition?
+
+```{r}
+ggplot(trees) +
+  geom_point(aes(diameter_breast_height,condition_percent))
+```
 
 
+## Is a certain genus of tree suffering more than others?
+
+```{r}
+ggplot(trees) +
+  geom_count(aes(genus,condition_percent))
+```
 
 
 
