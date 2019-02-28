@@ -1,0 +1,96 @@
+---
+title: "Visualize Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(RSocrata)
+library(dplyr)
+library(ggplot2)
+library(gganimate)
+library(knitr)
+library(kableExtra)
+```
+
+## Visualize with ggplot2
+
+ggplot2 is a package for visualizing data in R. Think of it as a "grammar of graphics".
+With ggplot2, one can create all manner of visualizations. We we also explore gganimate, a package for bringing a visual to life. 
+
+## Read in some Steller Sea Lion counts from NOAA Alaska Open Data
+
+```{r steller sea lions data}
+url <- "https://noaa-fisheries-afsc.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/cntk-5zqj"
+rsocrata_data <- read.socrata(url)
+
+cat("Let's take a look at a subset of the rows.\n")
+head(rsocrata_data, n = 5) %>%  kable(format = 'markdown', align = "c")
+```
+
+## And Group by Region
+
+```{r region}
+region_counts <- group_by(rsocrata_data, Region) %>% 
+  summarise(Non.Pup = sum(Non.Pup, na.rm = TRUE),
+            Pup = sum(Pup, na.rm = TRUE))
+region_counts
+```
+
+## Visually Display the Number of Pups and Non-Pups by Site
+
+The Grammar of Graphics offers up *three* key elements when creating a visualization:
+* data, or what will be visualized
+* geom, or how to display the data
+* aes, or the aesthetics of the display
+
+The structure:
+
+ggplot( *data to be used* ) +
+  *geom to be used* ( mapping = *aes( to be used like what is x, y, etc)* )
+
+```{r ggplot, echo=TRUE}
+ggplot(data = region_counts) +
+  geom_col(mapping = aes(x = Region, y = Non.Pup))
+```
+
+## Try it on your own:
+Create the same chart, but showing the count of *Pups* on the y-axis. 
+
+```{r try grammar, eval=F}
+
+
+```
+
+## Trees! (in Edmonton)
+
+Reading in the Trees from Edmonton's Open Data site ()
+
+```{r edmonton trees}
+url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=50000"
+trees <- read.socrata(url)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
