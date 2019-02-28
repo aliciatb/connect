@@ -85,13 +85,14 @@ readr_data %>%
 - R supports all HTTP requests methods
 - JSONLite makes it easy to work with JSON source
 - Use the SODA2 endpoint (which defaults to 1,000 records, but can get rowcount and then set limit to itd)
+- Read the Texas Registered Boats dataset with 650K records
 
 ```{r rHttrJsonExample}
 ## HTTR + JSONLite + SODA2 Endpoint
 
 # >- Defaults to 1,000 records so need to query rowcount from https://data.seattle.gov/resource/28ny-9ts8.json?$select=count(*) or request reasonably large number of rows https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000 for full dataset
 
-url_soda2_json <- "https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000"
+url_soda2_json <- "https://data.texas.gov/resource/5cwn-bm88.json?$limit=660000"
 socrata_user <- Sys.getenv("MY_SOCRATA_USERNAME")
 socrata_password <- Sys.getenv("MY_SOCRATA_PASSWORD")
 
@@ -102,7 +103,8 @@ response <- GET(url = url_soda2_json,
             fromJSON()
 
 response %>%
-  top_n(10, terry_stop_id) %>%
+  select(tx_number, year_built, make, model, engine_type, fuel_description, propulsion, vessel_type, vessel_use, city, county_name) %>%
+  top_n(10, tx_number) %>%
   kable() %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   kableExtra::scroll_box(width = "900px", height = "300px")

@@ -19,6 +19,6 @@
 - [Read datasets from Socrata using RSocrata, readr and httr libraries](https://aliciatb.github.io/connect/read_data.html)
 - Inspect dataset with summary statistics
 - Exploratory analysis with the tidy verse
-- Visualize dataset using ggplot - Ryan
+- [Visualize dataset using ggplot](https://aliciatb.github.io/connect/visualize_data.html) - Ryan
 - Create a report in R markdown as a Word doc, PDF, and more!
 - Create a flex dashboard that can be published to the web
