@@ -21,8 +21,8 @@ With ggplot2, one can create all manner of visualizations. We we also explore gg
 ## Read in some Steller Sea Lion counts from NOAA Alaska Open Data
 
 ```{r steller sea lions data}
-url <- "https://noaa-fisheries-afsc.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/cntk-5zqj"
-rsocrata_data <- read.socrata(url)
+sea_lions_url <- "https://noaa-fisheries-afsc.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/cntk-5zqj"
+rsocrata_data <- read.socrata(sea_lions_url)
 
 cat("Let's take a look at a subset of the rows.\n")
 head(rsocrata_data, n = 5) %>%  kable(format = 'markdown', align = "c")
@@ -40,24 +40,24 @@ region_counts
 ## Visually Display the Number of Pups and Non-Pups by Site
 
 The Grammar of Graphics offers up *three* key elements when creating a visualization:
-* data, or what will be visualized
-* geom, or how to display the data
-* aes, or the aesthetics of the display
+* data, or the dataset to be used in the visualization
+* geom, or what type of visualization will be created
+* aes, or the details of mapping the geom to the data, plus aesthetics
 
 The structure:
 
 ggplot( *data to be used* ) +
-  *geom to be used* ( mapping = *aes( to be used like what is x, y, etc)* )
+  *geom to be used* ( mapping = *aes( like what is x, y, etc)* )
 
-```{r ggplot, echo=TRUE}
+```{r seals chart, echo=TRUE}
 ggplot(data = region_counts) +
   geom_col(mapping = aes(x = Region, y = Non.Pup))
 ```
 
 ## Try it on your own:
-Create the same chart, but showing the count of *Pups* on the y-axis. 
+Create the same type of chart, but showing the count of *Pups* on the y-axis. 
 
-```{r try grammar, eval=F}
+```{r try seals chart, eval=F}
 
 
 ```
@@ -67,23 +67,41 @@ Create the same chart, but showing the count of *Pups* on the y-axis.
 Reading in the Trees from Edmonton's Open Data site ()
 
 ```{r edmonton trees}
-url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=10000"  ## Just 10,000 records to make things a little faster
-trees <- read.socrata(url)
+trees_url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=100000"  ## Just 10,000 records to make things a little faster
+trees <- read.socrata(trees_url)
 ```
 
-## Are larger trees in better or worse condition?
+## Tree Size and Condition Percent by Genus
+Here, we will use two additional arguments in our geom: 
+*color* to visually distinguish Genus
+*position* to modify how the points are plotted
+
+As well as two additional layers:
+*scale_x_discrete* and *scale_y_discrete* to customize the breaks on our axes.
+
+```{r trees chart}
+ggplot(trees) +
+  geom_point(mapping = aes(diameter_breast_height,condition_percent,color = genus), position = "jitter") +
+  scale_x_discrete(breaks = c(10,20,30,40,50,60,70,80,90)) +
+  scale_y_discrete(breaks = c(10,20,30,40,50,60,70,80,90))
+```
+
+In the code chunk below, create the same chart but with colors representing 'location_type'. Some structure has been provided, but not all. 
+
+```{r try trees chart,eval=F}
+ggplot(trees) +
+  geom_point(mapping = aes(), position = "jitter") +
+  scale_x_discrete(breaks = c(10,20,30,40,50,60,70,80,90)) +
+  scale_y_discrete(breaks = c(10,20,30,40,50,60,70,80,90))
+```
+
+
+## Faceting
 
 ```{r}
 ggplot(trees) +
-  geom_point(aes(diameter_breast_height,condition_percent))
-```
-
-
-## Is a certain genus of tree suffering more than others?
-
-```{r}
-ggplot(trees) +
-  geom_count(aes(genus,condition_percent))
+  geom_bar(aes(diameter_breast_height)) +
+  facet_wrap(~ genus)
 ```
 
 
