@@ -17,8 +17,8 @@ library(RSocrata)
 
 [RSocrata](https://github.com/Chicago/RSocrata) is a library created by the City of Chicago to enable reading, writing and discovering data.
 
-- Read a Socrata dataset
-- We can use the full URL
+- Read a Socrata dataset into R as a data frame.
+- We can use the full human-readbale URL or the SODA API endpoint. 
 
 ### Fish Species in Michigan
 
@@ -27,8 +27,8 @@ library(RSocrata)
 - We can even display the image URL as an image
 
 ```{r rSocrataExample}
-url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
-rsocrata_data <- read.socrata(url)
+fish_url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
+rsocrata_data <- read.socrata(fish_url)
 
 rsocrata_data %>%
   top_n(10, CommonName) %>%
@@ -38,6 +38,18 @@ rsocrata_data %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
+
+### Local Area Unemployment Statistics (LAUS) from the State of California Employment Development Department
+
+- Source: https://data.edd.ca.gov/Labor-Force-and-Unemployment-Rates/Local-Area-Unemployment-Statistics-LAUS-/e6gw-gvii
+- This is Open Data and requires no username/password to access. 
+
+```{r read LAUS}
+edd_url <- "https://data.edd.ca.gov/Labor-Force-and-Unemployment-Rates/Local-Area-Unemployment-Statistics-LAUS-/e6gw-gvii"
+laus_data <- read.socrata(edd_url)
+str(laus_data)
+```
+
 
 ### Stellar Sea Lion Count
 
@@ -80,11 +92,20 @@ readr_data %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
 
+### Readr with Local Area Unemployment Statistics
+
+```{r readr LAUS}
+readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD")
+str(readr_laus)
+
+```
+
+
 ## httr + jsonlite + soda2
 
 - R supports all HTTP requests methods
 - JSONLite makes it easy to work with JSON source
-- Use the SODA2 endpoint (which defaults to 1,000 records, but can get rowcount and then set limit to itd)
+- Use the SODA2 endpoint (which defaults to 1,000 records, but can get rowcount and then set limit to it)
 - Read the Texas Registered Boats dataset with 650K records
 
 ```{r rHttrJsonExample}
@@ -109,3 +130,15 @@ response %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
+
+
+### httr + jsonlite + SODA2 with Local Area Unemployment Statistics
+
+```{r httr LAUS}
+laus_soda2_json <- "https://data.edd.ca.gov/resource/e6gw-gvii.json?$limit=134000"
+response <- GET(url = laus_soda2_json) %>%   # make's the request to the Socrata API endpoint
+            content("text") %>%              # reads the byte response as text
+            fromJSON()                       # interprets the JSON structure returned in the response as a data frame
+str(response)
+```
+
