@@ -67,44 +67,67 @@ Create the same type of chart, but showing the count of *Pups* on the y-axis.
 Reading in the Trees from Edmonton's Open Data site ()
 
 ```{r edmonton trees}
-trees_url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=100000"  ## Just 10,000 records to make things a little faster
-trees <- read.socrata(trees_url)
+trees_url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=100000"  ## Just 100,000 records to make things a little faster
+trees <- read.socrata(trees_url) %>% mutate(condition_percent = as.numeric(condition_percent),
+                                            diameter_breast_height = as.numeric(diameter_breast_height))
 ```
+
+### Trees but with readr
+
+```{r readr trees}
+readr_trees <- read_csv("https://data.edmonton.ca/api/views/eecg-fc54/rows.csv?accessType=DOWNLOAD")
+str(readr_trees)
+
+```
+
 
 ## Tree Size and Condition Percent by Genus
 Here, we will use two additional arguments in our geom: 
 *color* to visually distinguish Genus
+*alpha* to control transparency of the points
 *position* to modify how the points are plotted
-
-As well as two additional layers:
-*scale_x_discrete* and *scale_y_discrete* to customize the breaks on our axes.
 
 ```{r trees chart}
 ggplot(trees) +
-  geom_point(mapping = aes(diameter_breast_height,condition_percent,color = genus), position = "jitter") +
-  scale_x_discrete(breaks = c(10,20,30,40,50,60,70,80,90)) +
-  scale_y_discrete(breaks = c(10,20,30,40,50,60,70,80,90))
+  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus, alpha = 0.8), position = "jitter")
 ```
 
 In the code chunk below, create the same chart but with colors representing 'location_type'. Some structure has been provided, but not all. 
 
 ```{r try trees chart,eval=F}
 ggplot(trees) +
-  geom_point(mapping = aes(), position = "jitter") +
-  scale_x_discrete(breaks = c(10,20,30,40,50,60,70,80,90)) +
-  scale_y_discrete(breaks = c(10,20,30,40,50,60,70,80,90))
+  geom_point(mapping = aes(), position = "jitter")
 ```
+
+## Let's make a histogram with the trunk size of each tree
+
+```{r histogram trees}
+ggplot(readr_trees) +
+  geom_histogram(aes(DIAMETER_BREAST_HEIGHT), binwidth = 5, color="white") +
+  theme_linedraw()
+```
+
 
 
 ## Faceting
 
-```{r}
-ggplot(trees) +
-  geom_bar(aes(diameter_breast_height)) +
-  facet_wrap(~ genus)
+```{r facet histogram}
+ggplot(readr_trees) +
+  geom_histogram(aes(DIAMETER_BREAST_HEIGHT), binwidth = 5, color="white") +
+  facet_wrap( ~ GENUS) +
+  theme_dark()
 ```
 
 
+## Local Area Unemployment Statistics for Los Angeles
+### Visualize labor force, unemployment rate for areas in California
+
+```{r LAUS exploration}
+laus_la <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "Y")
+ggplot(laus_la) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+
+```
 
 
 

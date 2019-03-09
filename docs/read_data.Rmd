@@ -12,6 +12,7 @@ library(kableExtra)
 library(knitr)
 library(readr)
 library(RSocrata)
+library(lubridate)
 ```
 ## RSocrata
 
@@ -95,7 +96,8 @@ readr_data %>%
 ### Readr with Local Area Unemployment Statistics
 
 ```{r readr LAUS}
-readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD")
+readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD") %>% 
+  mutate(Date = mdy(Date))
 str(readr_laus)
 
 ```
