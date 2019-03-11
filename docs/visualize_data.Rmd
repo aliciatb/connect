@@ -122,13 +122,19 @@ ggplot(readr_trees) +
 ## Local Area Unemployment Statistics for Los Angeles
 ### Visualize labor force, unemployment rate for areas in California
 
-```{r LAUS exploration}
+```{r LAUS exploration LA}
 laus_la <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "Y")
 ggplot(laus_la) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
 
 ```
 
+```{r LAUS MSA}
+laus_msa <- laus_data %>% filter(`area_type` == "Metropolitan Area" & `seasonally_adjusted_y_n` == "Y")
+ggplot(laus_msa) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`,color = `area_name`))
+
+```
 
 
 
