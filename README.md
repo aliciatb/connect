@@ -22,3 +22,6 @@
 - [Visualize dataset using ggplot](https://aliciatb.github.io/connect/visualize_data.html) - Ryan
 - Create a report in R markdown as a Word doc, PDF, and more!
 - Create a flex dashboard that can be published to the web
+
+## Visualizing your data, The Power of BI
+- [Asset Inventory Reports](https://app.powerbi.com/groups/me/reports/3e798ebf-93f0-4ca6-a2be-dc178b39fc48?ctid=7cc5f0f9-ee5b-4106-a62d-1b9f7be46118)
