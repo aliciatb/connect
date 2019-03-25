@@ -16,7 +16,7 @@ library(kableExtra)
 ## Visualize with ggplot2
 
 ggplot2 is a package for visualizing data in R. Think of it as a "grammar of graphics".
-With ggplot2, one can create all manner of visualizations. We we also explore gganimate, a package for bringing a visual to life. 
+With ggplot2, one can create all manner of visualizations. We also can explore gganimate, a package for bringing a visual to life. 
 
 ## Read in some Steller Sea Lion counts from NOAA Alaska Open Data
 
@@ -42,12 +42,14 @@ region_counts
 The Grammar of Graphics offers up *three* key elements when creating a visualization:
 * data, or the dataset to be used in the visualization
 * geom, or what type of visualization will be created
-* aes, or the details of mapping the geom to the data, plus aesthetics
+* aes, or the details of mapping the geom to the data, plus other aesthetics
 
 The structure:
 
 ggplot( *data to be used* ) +
   *geom to be used* ( mapping = *aes( like what is x, y, etc)* )
+  
+Run the code chunk below to see an example:
 
 ```{r seals chart, echo=TRUE}
 ggplot(data = region_counts) +
@@ -55,16 +57,17 @@ ggplot(data = region_counts) +
 ```
 
 ## Try it on your own:
-Create the same type of chart, but showing the count of *Pups* on the y-axis. 
+Create the same type of chart, but showing the count of *Pups* on the y-axis. Some structure has been provided. 
 
 ```{r try seals chart, eval=F}
-
+ggplot() +
+  geom_bar(mapping = aes())
 
 ```
 
 ## Trees! (in Edmonton)
 
-Reading in the Trees from Edmonton's Open Data site ()
+Reading in the Trees from Edmonton's Open Data site
 
 ```{r edmonton trees}
 trees_url <- "https://data.edmonton.ca/resource/93cp-z7sw.json?$limit=100000"  ## Just 100,000 records to make things a little faster
@@ -72,18 +75,9 @@ trees <- read.socrata(trees_url) %>% mutate(condition_percent = as.numeric(condi
                                             diameter_breast_height = as.numeric(diameter_breast_height))
 ```
 
-### Trees but with readr
-
-```{r readr trees}
-readr_trees <- read_csv("https://data.edmonton.ca/api/views/eecg-fc54/rows.csv?accessType=DOWNLOAD")
-str(readr_trees)
-
-```
-
-
 ## Tree Size and Condition Percent by Genus
-Here, we will use two additional arguments in our geom: 
-*color* to visually distinguish Genus
+Here, we will use three additional arguments with our geom: 
+*color* to visually distinguish based on another attribute in the data
 *alpha* to control transparency of the points
 *position* to modify how the points are plotted
 
@@ -96,49 +90,54 @@ In the code chunk below, create the same chart but with colors representing 'loc
 
 ```{r try trees chart,eval=F}
 ggplot(trees) +
-  geom_point(mapping = aes(), position = "jitter")
-```
-
-## Let's make a histogram with the trunk size of each tree
-
-```{r histogram trees}
-ggplot(readr_trees) +
-  geom_histogram(aes(DIAMETER_BREAST_HEIGHT), binwidth = 5, color="white") +
-  theme_linedraw()
+  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = location_type, alpha = 0.8), position = "jitter")
 ```
 
 
-
-## Faceting
-
-```{r facet histogram}
-ggplot(readr_trees) +
-  geom_histogram(aes(DIAMETER_BREAST_HEIGHT), binwidth = 5, color="white") +
-  facet_wrap( ~ GENUS) +
-  theme_dark()
-```
-
-
-## Local Area Unemployment Statistics for Los Angeles
+## Local Area Unemployment Statistics in California
 ### Visualize labor force, unemployment rate for areas in California
+
+Let's take a look at Los Angeles County's unemployment rates over time. 
 
 ```{r LAUS exploration LA}
 laus_la <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "Y")
 ggplot(laus_la) +
   geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
-
 ```
 
 ```{r LAUS MSA}
-laus_msa <- laus_data %>% filter(`area_type` == "Metropolitan Area" & `seasonally_adjusted_y_n` == "Y")
+laus_msa <- laus_data %>% filter(`area_type` == "Metropolitan Area" & `seasonally_adjusted_y_n` == "N")
 ggplot(laus_msa) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`,color = `area_name`))
+  geom_quantile(mapping = aes(x = date, y = `unemployment_rate`))
 
 ```
 
 
+```{r facet laus}
+ggplot(laus_msa) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`, color = area_name),show.legend = FALSE)
+```
 
+```{r LAUS boxplot}
+ggplot(laus_la) +
+  geom_boxplot(mapping = aes(x = month, y = unemployment_rate))
+```
 
+```{r laus boxplot la limited}
+laus_la_limited <- filter(laus_la, year > 2014 & year < 2019)
+ggplot(laus_la_limited) +
+  geom_boxplot(mapping = aes(x = month, y = unemployment_rate)) +
+  facet_wrap( ~ year)
+```
+
+```{r laus facet area type}
+laus_2010s <- filter(laus_data, year > 2015)
+
+ggplot(laus_2010s) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`, color = area_name)) +
+  facet_wrap( ~ area_type)
+
+```
 
 
 

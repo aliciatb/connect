@@ -51,6 +51,13 @@ laus_data <- read.socrata(edd_url)
 str(laus_data)
 ```
 
+### Use RSocrata::read.socrata() on your own! 
+Find a dataset on a Socrata site, like https://www.dallasopendata.com/
+
+```{r, eval = F}
+
+```
+
 
 ### Stellar Sea Lion Count
 
@@ -96,8 +103,8 @@ readr_data %>%
 ### Readr with Local Area Unemployment Statistics
 
 ```{r readr LAUS}
-readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD") %>% 
-  mutate(Date = mdy(Date))
+readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true") %>% 
+  mutate(Date = mdy(Date))  ## "CSV for Excel" option on a dataset's Primer page provides this endpoint
 str(readr_laus)
 
 ```
