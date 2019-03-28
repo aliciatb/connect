@@ -6,10 +6,10 @@
 
 - [Create a dataset](notebooks/create_dataset.ipynb)
 - [Update dataset metadata](notebooks/update_dataset_metadata.ipynb)
-- Update column metadata - Alicia
-- Add a Transform (Add points to dataset for choropleths, spatial validation after adding points, formatting year without comma if that's possible through transforms) - Ryan
-- Exploratory analysis and validation on datasets with visualizations - Roger
-- Discovery API (dataset counts) - Roger
+- [Update column metadata](notebooks/update_column_metadata.ipynb)
+- [Add a Transform](notebooks/add_transform.ipynb)
+- [Exploratory analysis and validation on datasets with visualizations](notebooks/city_of_mesa_use_cases.ipynb)
+- [Discovery API (dataset counts)](notebooks/city_of_mesa_use_cases.ipynb)
 - [Upload a Spatial dataset as geojson](notebooks/create_dataset_geojson.ipynb) (for spatial lens)
 
 ## [R You Ready to Learn R Socrata](https://aliciatb.github.io/connect/)
@@ -22,4 +22,4 @@
 - Create a flex dashboard that can be published to the web - Justin
 
 ## Visualizing your data, The Power of BI
-- [Asset Inventory Reports](https://app.powerbi.com/groups/me/reports/3e798ebf-93f0-4ca6-a2be-dc178b39fc48?ctid=7cc5f0f9-ee5b-4106-a62d-1b9f7be46118)
+- [Asset Inventory Reports](https://alicia.data.socrata.com/stories/s/48mh-jv64)
