@@ -116,11 +116,11 @@ First up, use readr with the Socrata dataset you chose earlier (the one you used
 Now, use the Local Area Unemployment Statistics endpoint provided with readr
 Feel free to use str(), head(), etc to get to know the data a little. 
 
-```{r readr LAUS}
+```{r readr LAUS, eval=F}
 ## "CSV for Excel" option on a dataset's Primer page provides this endpoint
 readr_laus_csv <- "https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
  
-
+readr_laus <- 
 
 ```
 
@@ -132,44 +132,29 @@ readr_laus <- readr_laus %>% dplyr::mutate(Date = lubridate::mdy(Date))
 str(readr_laus)
 ```
 
-## httr + jsonlite + soda2
+### httr + jsonlite + SODA2
 
+Local Area Unemployment Statistics from the JSON endpoint of SODA, Socrata Open Data API
 - R supports all HTTP requests methods
 - JSONLite makes it easy to work with JSON source
 - Use the SODA2 endpoint (which defaults to 1,000 records, but can get rowcount and then set limit to it)
-- Read the Texas Registered Boats dataset with 650K records
-
-```{r rHttrJsonExample}
-## HTTR + JSONLite + SODA2 Endpoint
-
-# >- Defaults to 1,000 records so need to query rowcount from https://data.seattle.gov/resource/28ny-9ts8.json?$select=count(*) or request reasonably large number of rows https://data.seattle.gov/resource/28ny-9ts8.json?$limit=50000 for full dataset
-
-url_soda2_json <- "https://data.texas.gov/resource/5cwn-bm88.json?$limit=660000"
-socrata_user <- Sys.getenv("MY_SOCRATA_USERNAME")
-socrata_password <- Sys.getenv("MY_SOCRATA_PASSWORD")
-
-response <- GET(url = url_soda2_json,
-                      config = authenticate(socrata_user,socrata_password, type = "basic")
-                ) %>% 
-            content("text") %>% 
-            fromJSON()
-
-response %>%
-  select(tx_number, year_built, make, model, engine_type, fuel_description, propulsion, vessel_type, vessel_use, city, county_name) %>%
-  top_n(10, tx_number) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  kableExtra::scroll_box(width = "900px", height = "300px")
-```
-
-
-### httr + jsonlite + SODA2 with Local Area Unemployment Statistics
 
 ```{r httr LAUS}
 laus_soda2_json <- "https://data.edd.ca.gov/resource/e6gw-gvii.json?$limit=134000"
-response <- GET(url = laus_soda2_json) %>%   # make's the request to the Socrata API endpoint
-            content("text") %>%              # reads the byte response as text
-            fromJSON()                       # interprets the JSON structure returned in the response as a data frame
+
+response <- GET(url = laus_soda2_json) %>%   # << make's the request to the Socrata API endpoint
+            content("text") %>%              # << reads the byte response as text
+            fromJSON()                       # << interprets the JSON structure returned in the response as a data frame
 str(response)
+```
+
+## Try it yourself: Use httr + jsonlite + SODA2
+With the Socrata dataset you picked earlier: 
+- copy the SODA json endpoint
+- add a limit parameter to grab as many rows as you need (be kind to the hotel wifi)
+- use httr::GET(), content(), and jsonlite::fromJSON() to read the data
+
+```{r httrPractice}
+
 ```
 
