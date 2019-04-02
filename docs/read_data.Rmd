@@ -16,7 +16,7 @@ library(lubridate)
 ```
 ## RSocrata
 
-[RSocrata](https://github.com/Chicago/RSocrata) is a library created by the City of Chicago to enable reading, writing and discovering data.
+[RSocrata](https://github.com/Chicago/RSocrata) is a library created by the City of Chicago to enable reading, writing and discovering data on Socrata powered sites.
 
 - Read a Socrata dataset into R as a data frame.
 - We can use the full human-readbale URL or the SODA API endpoint. 
@@ -26,6 +26,8 @@ library(lubridate)
 - Source: https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa
 - Since this is a public dataset, we don't need to pass user name, password or app token
 - We can even display the image URL as an image
+
+Run the chunk below to take a look at the dataset!
 
 ```{r rSocrataExample}
 fish_url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
@@ -41,6 +43,8 @@ rsocrata_data %>%
 ```
 
 ### Local Area Unemployment Statistics (LAUS) from the State of California Employment Development Department
+
+Let's read in data on unemployment rates, coming to us for this example from California.
 
 - Source: https://data.edd.ca.gov/Labor-Force-and-Unemployment-Rates/Local-Area-Unemployment-Statistics-LAUS-/e6gw-gvii
 - This is Open Data and requires no username/password to access. 
@@ -58,11 +62,10 @@ Find a dataset on a Socrata site, like https://www.dallasopendata.com/
 
 ```
 
-
-### Stellar Sea Lion Count
+### Read Private Data with RSocrata: Example with Stellar Sea Lion Count
 
 - For private datasets, you do need to include user name and password.
-- You can also create an API Key now on Socrata and pass the Key Id and Key Secret as user name and password respectively
+- You can also create a [Socrata API Key](https://socrataapikeys.docs.apiary.io/#) and pass the Key Id and Key Secret as user name and password, respectively
 
 ***Not really a private dataset, but made private for this example***
 
@@ -80,14 +83,14 @@ rsocrata_data %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
 
-## Readr
+## Readr package to read datasets from Socrata
 
-- Can read public datasets using the CSV endpoint (which returns all of the data!)
-- Preserves field names (rather than replacing spaces with periods)
+- Can read public datasets using the CSV endpoint (which returns all of the data! No need to paginate through a RESTful API)
+- Preserves field names as-is (rather than replacing spaces with periods)
 - Fast!
 - Returns as Tibble (part of the tidyverse!)
 
-### Dallas Rain Sensor Data
+### Here's an example: Dallas Rain Sensor Data
 
 ```{r rReadrExample}
 # public dataset example requiring no authentication
@@ -100,15 +103,34 @@ readr_data %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
 
-### Readr with Local Area Unemployment Statistics
+## Try using readr with the CSV endpoint! Part 1
 
-```{r readr LAUS}
-readr_laus <- read_csv("https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true") %>% 
-  mutate(Date = mdy(Date))  ## "CSV for Excel" option on a dataset's Primer page provides this endpoint
-str(readr_laus)
+First up, use readr with the Socrata dataset you chose earlier (the one you used with RSocrata)
+
+```{r CSVEndpoint}
 
 ```
 
+## Try using readr with the CSV endpoint! Part 2
+
+Now, use the Local Area Unemployment Statistics endpoint provided with readr
+Feel free to use str(), head(), etc to get to know the data a little. 
+
+```{r readr LAUS}
+## "CSV for Excel" option on a dataset's Primer page provides this endpoint
+readr_laus_csv <- "https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
+ 
+
+
+```
+
+The Date column is clearly a date, but is listed as a Character data type. Run the code chunk below to fix it. 
+This uses the dplyr and lubridate packages, part of the tidyverse!
+
+```{r LAUSDate}
+readr_laus <- readr_laus %>% dplyr::mutate(Date = lubridate::mdy(Date))
+str(readr_laus)
+```
 
 ## httr + jsonlite + soda2
 
