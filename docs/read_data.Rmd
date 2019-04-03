@@ -107,7 +107,7 @@ readr_data %>%
 
 First up, use readr with the Socrata dataset you chose earlier (the one you used with RSocrata)
 
-```{r CSVEndpoint}
+```{r CSVEndpoint,eval=F}
 
 ```
 
@@ -154,7 +154,7 @@ With the Socrata dataset you picked earlier:
 - add a limit parameter to grab as many rows as you need (be kind to the hotel wifi)
 - use httr::GET(), content(), and jsonlite::fromJSON() to read the data
 
-```{r httrPractice}
+```{r httrPractice, eval=F}
 
 ```
 

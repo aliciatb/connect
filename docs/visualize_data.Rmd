@@ -15,16 +15,15 @@ library(kableExtra)
 
 ## Visualize with ggplot2
 
-ggplot2 is a package for visualizing data in R. Think of it as a "grammar of graphics".
-With ggplot2, one can create all manner of visualizations. We also can explore gganimate, a package for bringing a visual to life. 
-
+ggplot2 is a package for visualizing data in R. It's a "grammar of graphics".
+With ggplot2, one can create all manner of visualizations. We can also explore gganimate, a package for bringing a visual to life. 
 ## Read in some Steller Sea Lion counts from NOAA Alaska Open Data
 
 ```{r steller sea lions data}
 sea_lions_url <- "https://noaa-fisheries-afsc.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/cntk-5zqj"
 rsocrata_data <- read.socrata(sea_lions_url)
 
-cat("Let's take a look at a subset of the rows.\n")
+cat("Let's take a look at a few of the rows.\n")
 head(rsocrata_data, n = 5) %>%  kable(format = 'markdown', align = "c")
 ```
 
@@ -65,7 +64,7 @@ ggplot() +
 
 ```
 
-## Trees! (in Edmonton)
+## Trees! (in Edmonton) Examples
 
 Reading in the Trees from Edmonton's Open Data site
 
@@ -79,18 +78,18 @@ trees <- read.socrata(trees_url) %>% mutate(condition_percent = as.numeric(condi
 Here, we will use three additional arguments with our geom: 
 *color* to visually distinguish based on another attribute in the data
 *alpha* to control transparency of the points
-*position* to modify how the points are plotted
+*position* to modify how the points are plotted (right on top of each other? jittered a little?)
 
 ```{r trees chart}
 ggplot(trees) +
-  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus, alpha = 0.8), position = "jitter")
+  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus),alpha = 0.5,position = "jitter")
 ```
 
-In the code chunk below, create the same chart but with colors representing 'location_type'. Some structure has been provided, but not all. 
+In the code chunk below, create the same chart but with colors representing 'location_type'. Some structure has been provided to get you started.
 
 ```{r try trees chart,eval=F}
 ggplot(trees) +
-  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = location_type, alpha = 0.8), position = "jitter")
+  geom_point(mapping = aes())
 ```
 
 
@@ -98,19 +97,15 @@ ggplot(trees) +
 ### Visualize labor force, unemployment rate for areas in California
 
 Let's take a look at Los Angeles County's unemployment rates over time. 
+We will use a new geom: *geom_line*
 
 ```{r LAUS exploration LA}
 laus_la <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "Y")
-ggplot(laus_la) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
+la_unem_rate <- ggplot(laus_la) +
+                  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
+la_unem_rate
 ```
 
-```{r LAUS MSA}
-laus_msa <- laus_data %>% filter(`area_type` == "Metropolitan Area" & `seasonally_adjusted_y_n` == "N")
-ggplot(laus_msa) +
-  geom_quantile(mapping = aes(x = date, y = `unemployment_rate`))
-
-```
 
 
 ```{r facet laus}
@@ -123,21 +118,9 @@ ggplot(laus_la) +
   geom_boxplot(mapping = aes(x = month, y = unemployment_rate))
 ```
 
-```{r laus boxplot la limited}
-laus_la_limited <- filter(laus_la, year > 2014 & year < 2019)
-ggplot(laus_la_limited) +
-  geom_boxplot(mapping = aes(x = month, y = unemployment_rate)) +
-  facet_wrap( ~ year)
-```
 
-```{r laus facet area type}
-laus_2010s <- filter(laus_data, year > 2015)
 
-ggplot(laus_2010s) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`, color = area_name)) +
-  facet_wrap( ~ area_type)
 
-```
 
 
 
