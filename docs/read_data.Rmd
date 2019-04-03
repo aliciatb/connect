@@ -90,22 +90,21 @@ rsocrata_data %>%
 - Fast!
 - Returns as Tibble (part of the tidyverse!)
 
-### Here's an example: Dallas Rain Sensor Data
+### Here's an example: Unemployment Rate by Age Groups in California
+
 
 ```{r rReadrExample}
 # public dataset example requiring no authentication
-readr_data <- read_csv("https://www.dallasopendata.com/api/views/jus4-wys9/rows.csv?accessType=DOWNLOAD")
-
-readr_data %>%
-  top_n(10, sensor_id) %>%
-  kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
-  kableExtra::scroll_box(width = "900px", height = "300px")
+unemp_age <- read_csv("https://data.edd.ca.gov/api/views/bcij-5wym/rows.csv?accessType=DOWNLOAD&bom=true&format=true") %>% 
+  mutate(Date = lubridate::mdy(Date))
+str(unemp_age)
 ```
 
 ## Try using readr with the CSV endpoint! Part 1
 
 First up, use readr with the Socrata dataset you chose earlier (the one you used with RSocrata)
+1. Right click on the CSV or CSV for Excel button on the Socrata dataset and copy that link
+2. Paste it in the code chunk and use readr::read_csv()
 
 ```{r CSVEndpoint,eval=F}
 
@@ -120,7 +119,7 @@ Feel free to use str(), head(), etc to get to know the data a little.
 ## "CSV for Excel" option on a dataset's Primer page provides this endpoint
 readr_laus_csv <- "https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
  
-readr_laus <- 
+readr_laus_data <- 
 
 ```
 

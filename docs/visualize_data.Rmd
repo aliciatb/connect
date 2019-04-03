@@ -96,27 +96,65 @@ ggplot(trees) +
 ## Local Area Unemployment Statistics in California
 ### Visualize labor force, unemployment rate for areas in California
 
+First, let's create some subsets of the data. 
+
+```{r variables}
+la_county <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "N")
+
+la_msa <- laus_data %>% filter(area_name == "Los Angeles County" | area_name == "Orange County" & `seasonally_adjusted_y_n` == "N")
+
+la_csa <- laus_data %>% filter(area_name == "Los Angeles County" | area_name == "Orange County" | area_name == "Ventura County" | area_name == "Riverside County" | area_name == "San Bernardino County" & `seasonally_adjusted_y_n` == "N")
+
+la_metro <- laus_data %>% filter(area_type == "Metropolitan Area" & area_name == "Los Angeles-Long Beach-Glendale MD" & `seasonally_adjusted_y_n` == "N")
+
+```
+
+
 Let's take a look at Los Angeles County's unemployment rates over time. 
 We will use a new geom: *geom_line*
 
 ```{r LAUS exploration LA}
-laus_la <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "Y")
-la_unem_rate <- ggplot(laus_la) +
-                  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
-la_unem_rate
+ggplot(la_county) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
+```
+
+Now, plot the LA metro area unemployment rate. Use the same structure as above, but with the `la_county` variable as your data. 
+
+```{r metro}
+ggplot(la_metro) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+```
+
+Looks similar. Let's use the Counties that make up the Los Angelese Metropolitan Statistical Area (MSA) and the Consolidated Statistical Area (CSA). 
+
+Fill in the mapping arguments for geom_line below:
+- x = date
+- y = unemployment_rate
+- color = area_name
+
+```{r msa, eval=F}
+ggplot(la_msa) +
+  geom_line()
+```
+
+Now do the same with the Combined Statistical Area (CSA)
+```{r csa,eval=F}
+ggplot(csa) +
+  geom_line()
+```
+
+Orange County is weird! What's with that cliff in 2010?
+We can explore with further visualization. 
+
+```{r the OC}
+the_oc <- laus_data %>% filter(area_name == "Orange County")
+
+ggplot(the_oc) +
+  geom_bar()
+
 ```
 
 
-
-```{r facet laus}
-ggplot(laus_msa) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`, color = area_name),show.legend = FALSE)
-```
-
-```{r LAUS boxplot}
-ggplot(laus_la) +
-  geom_boxplot(mapping = aes(x = month, y = unemployment_rate))
-```
 
 
 
