@@ -14,6 +14,7 @@ library(readr)
 library(RSocrata)
 library(lubridate)
 ```
+
 ## RSocrata
 
 [RSocrata](https://github.com/Chicago/RSocrata) is a library created by the City of Chicago to enable reading, writing and discovering data on Socrata powered sites.
@@ -56,7 +57,7 @@ str(laus_data)
 ```
 
 ### Use RSocrata::read.socrata() on your own! 
-Find a dataset on a Socrata site, like https://www.dallasopendata.com/
+Find a dataset on a Socrata site, like https://www.dallasopendata.com/, and use RSocrata::read_socrata() to read it in.
 
 ```{r, eval = F}
 
@@ -83,6 +84,7 @@ rsocrata_data %>%
   kableExtra::scroll_box(width = "900px", height = "300px")
 ```
 
+
 ## Readr package to read datasets from Socrata
 
 - Can read public datasets using the CSV endpoint (which returns all of the data! No need to paginate through a RESTful API)
@@ -90,21 +92,30 @@ rsocrata_data %>%
 - Fast!
 - Returns as Tibble (part of the tidyverse!)
 
-### Here's an example: Unemployment Rate by Age Groups in California
+### Here's an Example: Unemployment Insurance Weekly Claims Data for California
+With readr, you can rely on it to reasonably interpret column data types, or you can set them yourself in a few ways.
 
-
-```{r rReadrExample}
+```{r}
 # public dataset example requiring no authentication
-unemp_age <- read_csv("https://data.edd.ca.gov/api/views/bcij-5wym/rows.csv?accessType=DOWNLOAD&bom=true&format=true") %>% 
-  mutate(Date = lubridate::mdy(Date))
-str(unemp_age)
+uiwc_data <- read_csv("https://data.edd.ca.gov/api/views/qbrj-7mnz/rows.csv?accessType=DOWNLOAD&bom=true&format=true", 
+                      col_types = cols(
+                        `Area Type` = "c",
+                        `Area Name` = "c",
+                        `Filed week ended` = col_date(format = "%m/%d/%Y"),
+                        `Initial Claims` = "n",
+                        `Reflecting Week Ended` = col_date(format = "%m/%d/%Y"),
+                        `Continued Claims` = "n",
+                        `Covered Employment` = "n",
+                        `Insured Unemployment Rate` = "d"
+                      ))
+str(uiwc_data)
 ```
 
 ## Try using readr with the CSV endpoint! Part 1
 
 First up, use readr with the Socrata dataset you chose earlier (the one you used with RSocrata)
-1. Right click on the CSV or CSV for Excel button on the Socrata dataset and copy that link
-2. Paste it in the code chunk and use readr::read_csv()
+1. Right click on the CSV or CSV for Excel button on the Socrata dataset page and copy that link
+2. Use readr::read_csv() on that endpoint, like above (Leave the col_types bit out).
 
 ```{r CSVEndpoint,eval=F}
 
@@ -112,7 +123,7 @@ First up, use readr with the Socrata dataset you chose earlier (the one you used
 
 ## Try using readr with the CSV endpoint! Part 2
 
-Now, use the Local Area Unemployment Statistics endpoint provided with readr
+Now, use readr with the Local Area Unemployment Statistics endpoint provided
 Feel free to use str(), head(), etc to get to know the data a little. 
 
 ```{r readr LAUS, eval=F}
@@ -123,15 +134,16 @@ readr_laus_data <-
 
 ```
 
-The Date column is clearly a date, but is listed as a Character data type. Run the code chunk below to fix it. 
-This uses the dplyr and lubridate packages, part of the tidyverse!
+The Date column is clearly a date, but we didn't parse it as that type. Run the code chunk below to fix it. 
+This uses the dplyr and lubridate packages, part of the tidyverse! (just one way to parse it, readr can parse too, like in the example above).
 
 ```{r LAUSDate}
-readr_laus <- readr_laus %>% dplyr::mutate(Date = lubridate::mdy(Date))
-str(readr_laus)
+readr_laus_data <- readr_laus_data %>% dplyr::mutate(Date = lubridate::mdy(Date))
+str(readr_laus_data)
 ```
 
-### httr + jsonlite + SODA2
+
+## httr + jsonlite + SODA2
 
 Local Area Unemployment Statistics from the JSON endpoint of SODA, Socrata Open Data API
 - R supports all HTTP requests methods
@@ -149,11 +161,12 @@ str(response)
 
 ## Try it yourself: Use httr + jsonlite + SODA2
 With the Socrata dataset you picked earlier: 
-- copy the SODA json endpoint
-- add a limit parameter to grab as many rows as you need (be kind to the hotel wifi)
+- copy the SODA json endpoint (from the API menu)
+- optional: add a limit parameter (like the example above) to grab as many rows as you need (be kind to the hotel wifi)
 - use httr::GET(), content(), and jsonlite::fromJSON() to read the data
 
 ```{r httrPractice, eval=F}
 
 ```
 
+Now, get ready to Visualize some of this data in the next section!

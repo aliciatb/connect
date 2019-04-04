@@ -17,7 +17,8 @@ library(kableExtra)
 
 ggplot2 is a package for visualizing data in R. It's a "grammar of graphics".
 With ggplot2, one can create all manner of visualizations. We can also explore gganimate, a package for bringing a visual to life. 
-## Read in some Steller Sea Lion counts from NOAA Alaska Open Data
+
+### Read in some Steller Sea Lion counts from NOAA Alaska Open Data
 
 ```{r steller sea lions data}
 sea_lions_url <- "https://noaa-fisheries-afsc.data.socrata.com/Species/2016-Counts-of-Steller-Sea-Lions-Pups-Adults-and-J/cntk-5zqj"
@@ -27,7 +28,7 @@ cat("Let's take a look at a few of the rows.\n")
 head(rsocrata_data, n = 5) %>%  kable(format = 'markdown', align = "c")
 ```
 
-## And Group by Region
+### And Group by Region with dplyr
 
 ```{r region}
 region_counts <- group_by(rsocrata_data, Region) %>% 
@@ -36,7 +37,7 @@ region_counts <- group_by(rsocrata_data, Region) %>%
 region_counts
 ```
 
-## Visually Display the Number of Pups and Non-Pups by Site
+### Visually Display the Number of Pups and Non-Pups by Site
 
 The Grammar of Graphics offers up *three* key elements when creating a visualization:
 * data, or the dataset to be used in the visualization
@@ -51,17 +52,18 @@ ggplot( *data to be used* ) +
 Run the code chunk below to see an example:
 
 ```{r seals chart, echo=TRUE}
-ggplot(data = region_counts) +
-  geom_col(mapping = aes(x = Region, y = Non.Pup))
+nonpup_seals <- ggplot(data = region_counts) +
+                  geom_col(mapping = aes(x = Region, y = Non.Pup))
+nonpup_seals
 ```
 
-## Try it on your own:
+### Try it on your own:
 Create the same type of chart, but showing the count of *Pups* on the y-axis. Some structure has been provided. 
 
 ```{r try seals chart, eval=F}
-ggplot() +
-  geom_bar(mapping = aes())
-
+pup_seals <- ggplot() +
+                geom_bar(mapping = aes())
+pup_seals
 ```
 
 ## Trees! (in Edmonton) Examples
@@ -74,28 +76,33 @@ trees <- read.socrata(trees_url) %>% mutate(condition_percent = as.numeric(condi
                                             diameter_breast_height = as.numeric(diameter_breast_height))
 ```
 
-## Tree Size and Condition Percent by Genus
+### Tree Size and Condition Percent by Genus
 Here, we will use three additional arguments with our geom: 
 *color* to visually distinguish based on another attribute in the data
 *alpha* to control transparency of the points
 *position* to modify how the points are plotted (right on top of each other? jittered a little?)
 
 ```{r trees chart}
-ggplot(trees) +
-  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus),alpha = 0.5,position = "jitter")
+trees_genus <- ggplot(trees) +
+                geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus),alpha = 0.5,position = "jitter")
+
+trees_genus
 ```
 
+### Try it Yourself!
 In the code chunk below, create the same chart but with colors representing 'location_type'. Some structure has been provided to get you started.
 
 ```{r try trees chart,eval=F}
-ggplot(trees) +
-  geom_point(mapping = aes())
+trees_loctype <- ggplot(trees) +
+                  geom_point(mapping = aes())
+
+trees_loctype
 ```
 
 
 ## Local Area Unemployment Statistics in California
-### Visualize labor force, unemployment rate for areas in California
 
+### Visualize labor force, unemployment rate for areas in California
 First, let's create some subsets of the data. 
 
 ```{r variables}
@@ -110,24 +117,28 @@ la_metro <- laus_data %>% filter(area_type == "Metropolitan Area" & area_name ==
 ```
 
 
-Let's take a look at Los Angeles County's unemployment rates over time. 
+## Let's take a look at Los Angeles County's unemployment rates over time. 
 We will use a new geom: *geom_line*
 
 ```{r LAUS exploration LA}
-ggplot(la_county) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`)) 
+la_county_plot <- ggplot(la_county) +
+                    geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+
+la_county_plot
 ```
 
+### Your Turn!
 Now, plot the LA metro area unemployment rate. Use the same structure as above, but with the `la_county` variable as your data. 
 
-```{r metro}
-ggplot(la_metro) +
-  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+```{r metro, eval=F}
+ggplot() +
+  geom_line(mapping = aes())
 ```
 
 Looks similar. Let's use the Counties that make up the Los Angelese Metropolitan Statistical Area (MSA) and the Consolidated Statistical Area (CSA). 
 
-Fill in the mapping arguments for geom_line below:
+### MSA Plot
+Fill in the mapping arguments for geom_line. Recall the structure from previous examples. 
 - x = date
 - y = unemployment_rate
 - color = area_name
@@ -137,23 +148,55 @@ ggplot(la_msa) +
   geom_line()
 ```
 
+### CSA Plot
 Now do the same with the Combined Statistical Area (CSA)
 ```{r csa,eval=F}
-ggplot(csa) +
-  geom_line()
+la_csa_plot <- ggplot(la_csa) +
+                  geom_line()
+
+la_csa_plot
 ```
 
-Orange County is weird! What's with that cliff in 2010?
-We can explore with further visualization. 
+## Faceting!
+Faceting creates for small plots of the same geom based on some variable you provide. 
+
+```{r}
+ggplot(la_csa) +
+  geom_line(aes(date,unemployment_rate)) +
+  facet_wrap(~ area_name)
+```
+
+## ggplot and dplyr for Initial Exploration % Error Validation of Data
+
+What's with that cliff in 2010 for Orange County?
+We can spot check with further visualization and functions from the dplyr package. 
 
 ```{r the OC}
 the_oc <- laus_data %>% filter(area_name == "Orange County")
+check_the_oc <- the_oc %>% group_by(year) %>% summarise(rown = length(unique(date)))
 
-ggplot(the_oc) +
-  geom_bar()
-
+ggplot(check_the_oc) +
+  geom_col(mapping = aes(x = year, y = rown))
 ```
 
+## Further refine a visualization in all sort of ways
+- Mutliple geoms
+- Axis choices
+- Themes
+- Annotations
+- And much much more!
+
+```{r}
+uiwc_plot <- ggplot(uiwc_data) +
+                geom_line(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
+                geom_line(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
+                geom_smooth(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
+                geom_smooth(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
+                theme_bw() +
+                labs(x = "Date", y = "Claims, Initial and Continued", title = "Unemployment Insurance Weekly Claims") +
+                annotate(geom = "text", x = as_date("2000-12-01"), y = 125000, label = "Initial Claims") +
+                annotate(geom = "text", x = as_date("2000-12-01"), y = 750000, label = "Continued Claims")
+```
 
 
 
