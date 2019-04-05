@@ -11,6 +11,8 @@ library(ggplot2)
 library(gganimate)
 library(knitr)
 library(kableExtra)
+library(readr)
+library(lubridate)
 ```
 
 ## Visualize with ggplot2
@@ -58,10 +60,9 @@ Here, we will use three additional arguments with our geom:
 *position* to modify how the points are plotted (right on top of each other? jittered a little?)
 
 ```{r trees chart}
-trees_genus <- ggplot(trees) +
-                geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus), alpha = 0.5, position = "jitter")
+ggplot(trees) +
+  geom_point(mapping = aes(x = diameter_breast_height, y = condition_percent, color = genus), alpha = 0.5, position = "jitter")
 
-trees_genus
 ```
 
 ### Try it Yourself!
@@ -70,10 +71,9 @@ In the code chunk below, create the same chart but with colors representing 'loc
 Stuck? Copy everything after "mapping = " and before the last parenthesis from the example above, and change *genus* to *location_type.*
 
 ```{r try trees chart,eval=F}
-trees_loctype <- ggplot(trees) +
-                  geom_point(mapping = )
+ggplot(trees) +
+  geom_point(mapping = )
 
-trees_loctype
 ```
 
 
@@ -83,6 +83,9 @@ trees_loctype
 First, let's create some subsets of the data. 
 
 ```{r variables}
+edd_url <- "https://data.edd.ca.gov/Labor-Force-and-Unemployment-Rates/Local-Area-Unemployment-Statistics-LAUS-/e6gw-gvii"
+laus_data <- read.socrata(edd_url)
+
 la_county <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "N")
 
 la_msa <- laus_data %>% filter(area_name == "Los Angeles County" | area_name == "Orange County" & `seasonally_adjusted_y_n` == "N")
@@ -99,10 +102,9 @@ cat("Nice! We now have some filtered views of the unemployment data.")
 We will use a new geom: *geom_line*
 
 ```{r LAUS exploration LA}
-la_county_plot <- ggplot(la_county) +
-                    geom_line(mapping = aes(x = date, y = `unemployment_rate`))
+ggplot(la_county) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
 
-la_county_plot
 ```
 
 
@@ -122,10 +124,9 @@ ggplot(la_msa) +
 Let's make sure other counties around LA don't have the cliff that Orange County does. Run the code chunk to check.
 
 ```{r csa}
-la_csa_plot <- ggplot(la_csa) +
-                  geom_line(aes(x = date, y = unemployment_rate, color = area_name))
+ggplot(la_csa) +
+  geom_line(aes(x = date, y = unemployment_rate, color = area_name))
 
-la_csa_plot
 ```
 
 ## Faceting!
@@ -158,16 +159,28 @@ ggplot(check_the_oc) +
 - And much much more!
 
 ```{r uiwc}
-uiwc_plot <- ggplot(uiwc_data) +
-                geom_line(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
-                geom_line(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
-                geom_smooth(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
-                geom_smooth(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
-                theme_bw() +
-                labs(x = "Date", y = "Claims, Initial and Continued", title = "Unemployment Insurance Weekly Claims") +
-                annotate(geom = "text", x = as_date("2000-12-01"), y = 125000, label = "Initial Claims") +
-                annotate(geom = "text", x = as_date("2000-12-01"), y = 750000, label = "Continued Claims")
-uiwc_plot
+uiwc_data <- read_csv("https://data.edd.ca.gov/api/views/qbrj-7mnz/rows.csv?accessType=DOWNLOAD&bom=true&format=true", 
+                      col_types = cols(
+                        `Area Type` = "c",
+                        `Area Name` = "c",
+                        `Filed week ended` = col_date(format = "%m/%d/%Y"),
+                        `Initial Claims` = "n",
+                        `Reflecting Week Ended` = col_date(format = "%m/%d/%Y"),
+                        `Continued Claims` = "n",
+                        `Covered Employment` = "n",
+                        `Insured Unemployment Rate` = "d"
+                      ))
+
+ggplot(uiwc_data) +
+    geom_line(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
+    geom_line(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
+    geom_smooth(mapping = aes(x = `Filed week ended`, y = `Initial Claims`)) +
+    geom_smooth(mapping = aes(x = `Filed week ended`, y = `Continued Claims`)) +
+    theme_bw() +
+    labs(x = "Date", y = "Claims, Initial and Continued", title = "Unemployment Insurance Weekly Claims") +
+    annotate(geom = "text", x = as_date("2000-12-01"), y = 125000, label = "Initial Claims") +
+    annotate(geom = "text", x = as_date("2000-12-01"), y = 750000, label = "Continued Claims")
+
 ``` 
 
 

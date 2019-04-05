@@ -13,21 +13,54 @@ library(knitr)
 library(readr)
 library(RSocrata)
 library(lubridate)
+library(ggplot2)
 ```
 
-## R Markdown and Knitr
+#### R Markdown and Knitr
 
 This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
 
+## Our Report
+Unemployment Rate over time for Los Angeles County, courtesy of a code chunk in a R Markdown document. 
+```{r LA County plot, error=T,echo=F, fig.width=10}
+edd_url <- "https://data.edd.ca.gov/Labor-Force-and-Unemployment-Rates/Local-Area-Unemployment-Statistics-LAUS-/e6gw-gvii"
+laus_data <- read.socrata(edd_url)
 
-## Let's Make a Report
+la_county <- laus_data %>% filter(`area_name` == "Los Angeles County" & `seasonally_adjusted_y_n` == "N")
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+ggplot(la_county) +
+  geom_line(mapping = aes(x = date, y = `unemployment_rate`))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Exploring Unemployment Rate
+
+When exploring unemployment rate by County in the LA Metropolitan Statistical Area, something looks weird in the 2010s. 
+Here, we create the plot in another code chunk. 
+
+```{r la csa, error=T,echo=F, fig.width=10}
+la_csa <- laus_data %>% filter(area_name == "Los Angeles County" | area_name == "Orange County" | area_name == "Ventura County" | area_name == "Riverside County" | area_name == "San Bernardino County" & `seasonally_adjusted_y_n` == "N")
+
+ggplot(la_csa) +
+  geom_line(aes(x = date, y = unemployment_rate, color = area_name))
+```
+
+### Validating the Unemployment Rate Dataset
+
+Orange County's unemployment rate drops off a cliff in 2010, yet still has some bumps in the line during that decade. 
+
+Here's our quick spot check of the dataset, counting months present in the data for each year for Orange County. 
+
+```{r the oc, error=T, echo=F, fig.width=10}
+the_oc <- laus_data %>% filter(area_name == "Orange County")
+check_the_oc <- the_oc %>% group_by(year) %>% summarise(rown = length(unique(date)))
+
+ggplot(check_the_oc) +
+  geom_col(mapping = aes(x = year, y = rown))
+```
+
+With a click of "Knit" in RStudio, here's a report in an easily shareable HTML format, indicating that the data is missing some rows for Orange County. 
+
+#### RMarkdown can be knit into many, many common formats including *Word*, *PDF*, *HTML*, and *slides*. Other packages extend on this allowing for *books*, *letters*, *blogs*, and *posters* to be knit from RMarkdown. 
+
