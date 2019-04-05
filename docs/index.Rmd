@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - Ad-hoc interactive performance dashboards
 - Internal report creation by non-technical users
 - Joining open data with internal databases
-- Reading and data from and to Socrata
+- Reading and writing data from and to Socrata
 - Exploratory analysis and visualizations and predictive modeling
 
 ## Why R and RStudio?

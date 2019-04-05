@@ -57,7 +57,7 @@ str(laus_data)
 ```
 
 ### Use RSocrata::read.socrata() on your own! 
-Find a dataset on a Socrata site, like https://www.dallasopendata.com/, and use RSocrata::read_socrata() to read it in.
+Find a dataset on a Socrata site, like https://www.dallasopendata.com/, and use RSocrata::read.socrata() to read it in.
 
 ```{r, eval = F}
 
@@ -111,35 +111,14 @@ uiwc_data <- read_csv("https://data.edd.ca.gov/api/views/qbrj-7mnz/rows.csv?acce
 str(uiwc_data)
 ```
 
-## Try using readr with the CSV endpoint! Part 1
+## Try using readr with the CSV endpoint!
 
 First up, use readr with the Socrata dataset you chose earlier (the one you used with RSocrata)
 1. Right click on the CSV or CSV for Excel button on the Socrata dataset page and copy that link
-2. Use readr::read_csv() on that endpoint, like above (Leave the col_types bit out).
+2. Use readr::read_csv() on that endpoint, like above (Don't worry about the col_types bit, you can leave that out for now).
 
 ```{r CSVEndpoint,eval=F}
 
-```
-
-## Try using readr with the CSV endpoint! Part 2
-
-Now, use readr with the Local Area Unemployment Statistics endpoint provided
-Feel free to use str(), head(), etc to get to know the data a little. 
-
-```{r readr LAUS, eval=F}
-## "CSV for Excel" option on a dataset's Primer page provides this endpoint
-readr_laus_csv <- "https://data.edd.ca.gov/api/views/e6gw-gvii/rows.csv?accessType=DOWNLOAD&bom=true&format=true"
- 
-readr_laus_data <- 
-
-```
-
-The Date column is clearly a date, but we didn't parse it as that type. Run the code chunk below to fix it. 
-This uses the dplyr and lubridate packages, part of the tidyverse! (just one way to parse it, readr can parse too, like in the example above).
-
-```{r LAUSDate}
-readr_laus_data <- readr_laus_data %>% dplyr::mutate(Date = lubridate::mdy(Date))
-str(readr_laus_data)
 ```
 
 
