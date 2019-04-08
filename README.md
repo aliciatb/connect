@@ -19,4 +19,6 @@
 - Create a flex dashboard that can be published to the web - Justin
 
 ## Visualizing your data, The Power of BI
-- [Asset Inventory Reports](https://alicia.data.socrata.com/stories/s/48mh-jv64)
+- [Seattle Catalog Health Dashboard](https://alicia.data.socrata.com/stories/s/48mh-jv64)
+- [Power BI Report](https://app.powerbi.com/reportEmbed?reportId=3e798ebf-93f0-4ca6-a2be-dc178b39fc48&autoAuth=true&ctid=7cc5f0f9-ee5b-4106-a62d-1b9f7be46118)
+- [Public Asset Inventory View](https://data.seattle.gov/dataset/Seattle-Public-Dataset-Asset-Inventory/nymu-ywvk)
