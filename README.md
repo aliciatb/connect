@@ -4,13 +4,10 @@
 
 ## Create and Update Data with Python & APIs
 
-- [Create a dataset](notebooks/create_dataset.ipynb)
-- [Update dataset metadata](notebooks/update_dataset_metadata.ipynb)
-- [Update column metadata](notebooks/update_column_metadata.ipynb)
-- [Add a Transform](notebooks/add_transform.ipynb)
-- [Exploratory analysis and validation on datasets with visualizations](notebooks/city_of_mesa_use_cases.ipynb)
-- [Discovery API (dataset counts)](notebooks/city_of_mesa_use_cases.ipynb)
-- [Upload a Spatial dataset as geojson](notebooks/create_dataset_geojson.ipynb) (for spatial lens)
+- [1. Create a dataset, transform and update column metadata](notebooks/1_socrata_py_create_dataset.ipynb)
+- [2. Update dataset metadata in bulk](notebooks/2_update_metadata.ipynb)
+- [3. Discovery API for dataset counts, exploratory analysis and validation on datasets with visualizations by Mesa, AZ](notebooks/3_city_of_mesa_use_cases.ipynb)
+- [4. Bonus - Upload a Spatial dataset as geojson](notebooks/4_bonus_create_dataset_geojson.ipynb)
 
 ## [R You Ready to Learn R Socrata](https://aliciatb.github.io/connect/)
 
