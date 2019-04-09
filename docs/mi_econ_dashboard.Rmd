@@ -13,22 +13,16 @@ library(tidyverse)
 library(RSocrata)
 library(readxl)
 library(lubridate)
-
 options(tz="US/Michigan")  # req for read.socrata()
 knitr::opts_chunk$set(fig.width=16, fig.height=8)
 ```
 
 ```{r unemployment_data, include=FALSE}
-
 #### MI Economic Outcomes ####
-
 # Unemployment, Labor Force, LFPR, U-6
 econ_url <- "https://future.michigan.gov/Economy/LMISI-Monthly-Measures/v2fn-bucf"
 econ <- read.socrata(econ_url)
-
-
 #### Join MI Unemployment Data ####
-
 # Unemployment Rates
 unemp_url <- "https://data.michigan.gov/Economy/Unemployment-Rate/kamp-ngb9"
 unemp <- read.socrata(unemp_url) %>%
@@ -44,22 +38,16 @@ unemp <- read.socrata(unemp_url) %>%
   # rename columns
   rename(MI = unemployment_rate_mi,
          US = unemployment_rate_us)
-
-
 #### FRED County Data ####
 counties <- read_csv("fredgraph.csv") %>%
   rename(Wayne = MIWAYN3URN,
          Kalamazoo = MIKALA7URN,
          Saginaw = MISAGI5URN,
          Ingham = MIINGH5URN)
-
-
 #### Join Unemployment Data ####
-
 unemployment <- unemp %>%
   # return matching rows from counties
   left_join(counties, by = c("date" = "DATE"))
-
 ```
 
 
@@ -70,7 +58,6 @@ Row
 -----------------------------------------------------------------------
 
 ```{r chart_theme}
-
 # Theme specifications
 theme_som <- function(base_size = 11, base_family = "",
                           base_line_size = base_size / 22,
@@ -91,7 +78,6 @@ theme_som <- function(base_size = 11, base_family = "",
       strip.background  = element_blank(),
       plot.background   = element_blank(),
       axis.title        = element_blank(),
-
       complete = TRUE
     )
 }
@@ -101,14 +87,12 @@ theme_som <- function(base_size = 11, base_family = "",
 ### Unemployment
 
 ```{r unemployment_plot}
-
 unemployment %>%
   select(date, MI, US) %>%  # select unemp columns
   gather(key = "Location", value = "unemp_rate", -date) %>%  # tidy!
   ggplot(aes(date, unemp_rate, color = Location)) +
     geom_line() +
     theme_som()
-
 ```
 
 ### Labor Underutilization
@@ -152,12 +136,10 @@ Row {.tabset}
 
 ```{r state_compare}
 #### New Local Unemployment Variable ####
-
 unemp_local <- unemployment %>%
   filter(!is.na(Wayne)) %>%
   mutate(`Local Avg` = (Wayne + Kalamazoo + Saginaw + Ingham) / 4) %>%
   gather(key = "Location", value = "unemp_rate", -date)  # tidy!
-
 unemp_local %>%
   ggplot(aes(date, unemp_rate, color = Location)) +
     geom_line() +
@@ -203,31 +185,4 @@ unemp_local %>%
   ggplot(aes(date, unemp_rate, color = Location)) +
     geom_line() +
     theme_som()
-```
-
-Region
-=======================================================================
-
-Row {data-width=650}
------------------------------------------------------------------------
-
-### Chart A
-
-```{r}
-
-```
-
-Row {data-width=350}
------------------------------------------------------------------------
-
-### Chart B
-
-```{r}
-
-```
-
-### Chart C
-
-```{r}
-
 ```
