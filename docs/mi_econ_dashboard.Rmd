@@ -1,0 +1,233 @@
+---
+title: "Michigan Economic Indicator Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+# Libraries
+library(flexdashboard)
+library(tidyverse)
+library(RSocrata)
+library(readxl)
+library(lubridate)
+
+options(tz="US/Michigan")  # req for read.socrata()
+knitr::opts_chunk$set(fig.width=16, fig.height=8)
+```
+
+```{r unemployment_data, include=FALSE}
+
+#### MI Economic Outcomes ####
+
+# Unemployment, Labor Force, LFPR, U-6
+econ_url <- "https://future.michigan.gov/Economy/LMISI-Monthly-Measures/v2fn-bucf"
+econ <- read.socrata(econ_url)
+
+
+#### Join MI Unemployment Data ####
+
+# Unemployment Rates
+unemp_url <- "https://data.michigan.gov/Economy/Unemployment-Rate/kamp-ngb9"
+unemp <- read.socrata(unemp_url) %>%
+  # convert to tibble class
+  as_tibble() %>%
+  # remove unwanted rows
+  select(-highlights, -rank) %>%
+  # reformat rates as percentages
+  mutate(unemployment_rate_us = unemployment_rate_us * 100,
+         unemployment_rate_mi = unemployment_rate_mi * 100,
+  # reformat dates
+         date = as_date(parse_date_time(date, orders = "m-y"))) %>%
+  # rename columns
+  rename(MI = unemployment_rate_mi,
+         US = unemployment_rate_us)
+
+
+#### FRED County Data ####
+counties <- read_csv("fredgraph.csv") %>%
+  rename(Wayne = MIWAYN3URN,
+         Kalamazoo = MIKALA7URN,
+         Saginaw = MISAGI5URN,
+         Ingham = MIINGH5URN)
+
+
+#### Join Unemployment Data ####
+
+unemployment <- unemp %>%
+  # return matching rows from counties
+  left_join(counties, by = c("date" = "DATE"))
+
+```
+
+
+Michigan
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+```{r chart_theme}
+
+# Theme specifications
+theme_som <- function(base_size = 11, base_family = "",
+                          base_line_size = base_size / 22,
+                          base_rect_size = base_size / 22) {
+  # Starts with theme_bw and remove most parts - scaled down theme_minimalist
+  theme_bw(
+    base_size = base_size,
+    base_family = base_family,
+    base_line_size = base_line_size,
+    base_rect_size = base_rect_size
+  ) %+replace%
+    theme(
+      axis.ticks        = element_blank(),
+      legend.background = element_blank(),
+      legend.key        = element_blank(),
+      panel.background  = element_blank(),
+      panel.border      = element_blank(),
+      strip.background  = element_blank(),
+      plot.background   = element_blank(),
+      axis.title        = element_blank(),
+
+      complete = TRUE
+    )
+}
+```
+
+
+### Unemployment
+
+```{r unemployment_plot}
+
+unemployment %>%
+  select(date, MI, US) %>%  # select unemp columns
+  gather(key = "Location", value = "unemp_rate", -date) %>%  # tidy!
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+
+```
+
+### Labor Underutilization
+
+```{r u-6}
+econ %>%
+  filter(!is.na(u_6)) %>%
+  ggplot(aes(date, u_6)) +
+    geom_line() +
+    theme_som()
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Labor Force
+
+```{r lf}
+econ %>%
+  ggplot(aes(date, labor_force)) +
+  geom_line() +
+  theme_som()
+```
+
+### Labor Force Participation Rate
+
+```{r lfpr}
+econ %>%
+  ggplot(aes(date, labor_force_participation_rate)) +
+  geom_line() +
+  theme_som()
+```
+
+Local
+=======================================================================
+
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### County Unemployment
+
+```{r state_compare}
+#### New Local Unemployment Variable ####
+
+unemp_local <- unemployment %>%
+  filter(!is.na(Wayne)) %>%
+  mutate(`Local Avg` = (Wayne + Kalamazoo + Saginaw + Ingham) / 4) %>%
+  gather(key = "Location", value = "unemp_rate", -date)  # tidy!
+
+unemp_local %>%
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+```
+
+
+### Wayne
+
+```{r wayne}
+unemp_local %>%
+  filter(Location %in% c("MI", "US", "Wayne", "Local Avg")) %>%
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+```
+
+### Kalamazoo
+
+```{r kalamazoo}
+unemp_local %>%
+  filter(Location %in% c("MI", "US", "Kalamazoo", "Local Avg")) %>%
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+```
+
+### Saginaw
+
+```{r saginaw}
+unemp_local %>%
+  filter(Location %in% c("MI", "US", "Saginaw", "Local Avg")) %>%
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+```
+
+### Ingham
+
+```{r ingham}
+unemp_local %>%
+  filter(Location %in% c("MI", "US", "Ingham", "Local Avg")) %>%
+  ggplot(aes(date, unemp_rate, color = Location)) +
+    geom_line() +
+    theme_som()
+```
+
+Region
+=======================================================================
+
+Row {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+
+```
+
+Row {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+```
+
+### Chart C
+
+```{r}
+
+```
