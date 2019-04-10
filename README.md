@@ -12,11 +12,9 @@
 ## [R You Ready to Learn R Socrata](https://aliciatb.github.io/connect/)
 
 - [Read datasets from Socrata using RSocrata, readr and httr libraries](https://aliciatb.github.io/connect/read_data.html)
-- Inspect dataset with summary statistics - Alicia
-- Exploratory analysis with the tidy verse - Alicia
-- [Visualize dataset using ggplot](https://aliciatb.github.io/connect/visualize_data.html) - Ryan
-- Create a report in R markdown as a Word doc, PDF, and more! - Justin
-- Create a flex dashboard that can be published to the web - Justin
+- [Visualize dataset using ggplot](https://aliciatb.github.io/connect/visualize_data.html)
+- [Unemployment Labor Report](https://aliciatb.github.io/connect/knit_markdown.html)
+- [Michigan Economic Dashboard](https://aliciatb.github.io/connect/mi_econ_dashboard.html)
 
 ## Visualizing your data, The Power of BI
 - [Seattle Catalog Health Dashboard](https://alicia.data.socrata.com/stories/s/48mh-jv64)
