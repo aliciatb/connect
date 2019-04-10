@@ -14,6 +14,7 @@
 - [Read datasets from Socrata using RSocrata, readr and httr libraries](https://aliciatb.github.io/connect/read_data.html)
 - [Visualize dataset using ggplot](https://aliciatb.github.io/connect/visualize_data.html)
 - [Unemployment Labor Report](https://aliciatb.github.io/connect/knit_markdown.html)
+- [Michigan Economic Report](https://aliciatb.github.io/connect/mi_econ_report.nb.html)
 - [Michigan Economic Dashboard](https://aliciatb.github.io/connect/mi_econ_dashboard.html)
 
 ## Visualizing your data, The Power of BI

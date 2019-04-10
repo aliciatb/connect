@@ -1,12 +1,30 @@
 ---
-title: "Michigan Economic Indicator Dashboard"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: rows
-    vertical_layout: fill
+title: "MI Economic Indicator Report"
+author: "Justin Baker"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_notebook: default
+  pdf_document: default
 ---
+## Reporting Time!
+Now let's take everything we've learned and generate a report. But before we begin, a few notes.
 
-```{r setup, include=FALSE}
+#### A Note About Style
+You may notice some differences between the way Alicia, Ryan and I have written some things in our code. There are many ways to do many things in R, so naturally everyone's code may end up looking a little different.
+
+One way to make sure everyone's code isn't too different is to implement a programming style guide in your organization. In the Office of Good Government at  the State of Michigan, we use [Google's R Style Guide](https://google.github.io/styleguide/Rguide.xml), with a few modifications. That helps make sure everyone can read everyone else's code.
+
+#### Do It Yourself!
+I've used some data from `future.michigan.gov`, our open performance site. But I strongly encourage you to visit your own Open Data Portal and find some data that you know well to build charts of your own!
+
+Okay, back to the report!
+
+## Packages
+Before we begin, let's make sure we've installed all the packages we'll need. If you haven't installed the following packages, head over to the console and run `install.packages("package_name")`.
+
+
+```{r setup, warning=FALSE, message=FALSE}
+#### Libraries ####
 # Libraries
 library(flexdashboard)
 library(tidyverse)
@@ -14,9 +32,16 @@ library(RSocrata)
 library(readxl)
 library(lubridate)
 
-options(tz="US/Michigan")  # possibly req for read.socrata()
+#### Options ####
+options(tz="US/Michigan")  # might be req for read.socrata()
 knitr::opts_chunk$set(fig.width=16, fig.height=8)
+
 ```
+
+## Unemployment Data
+Next, we'll practice what Alicia and Ryan have just shown us - we'll pull, clean, and transform datasets from Socrata and Excel to create the data that will generate our report.
+
+Notice that our Socrata data is pulled through the Socrata API. This means that if I want to update this report in the future, all I need to do is re-run the code chunks, and all of my visualizations will automatically update.
 
 ```{r unemployment_data, include=FALSE}
 
@@ -63,15 +88,11 @@ unemployment <- unemp %>%
 ```
 
 
-Michigan
-=======================================================================
+```{r chart_theme, include=FALSE}
 
-Row
------------------------------------------------------------------------
+# Please feel free to use this theme in your visualizations! I've just made a few modifications to the theme_minimalist() ggplot theme to remove axis titles. We'll see that come in handy in the dashboards section!
 
-```{r chart_theme}
-
-# Theme specifications
+# ggplot theme specifications
 theme_som <- function(base_size = 11, 
                       base_family = "",
                       base_line_size = base_size / 22,
@@ -98,14 +119,20 @@ theme_som <- function(base_size = 11,
 }
 ```
 
+******
+
+## Michigan Economic Indicators
 
 ### Unemployment
 
 ```{r unemployment_plot}
 
 unemployment %>%
-  select(date, MI, US) %>%  # select unemp columns
-  gather(key = "Location", value = "unemp_rate", -date) %>%  # tidy!
+  # select unemp columns
+  select(date, MI, US) %>%
+  # the data is wide - let's make it tidy!
+  gather(key = "Location", value = "unemp_rate", -date) %>%
+  # plotting our data
   ggplot(aes(date, unemp_rate, color = Location)) +
     geom_line() +
     theme_som()
@@ -116,14 +143,12 @@ unemployment %>%
 
 ```{r u-6}
 econ %>%
+  # U-6 has some NA - let's get rid of those
   filter(!is.na(u_6)) %>%
   ggplot(aes(date, u_6)) +
     geom_line() +
     theme_som()
 ```
-
-Row
------------------------------------------------------------------------
 
 ### Labor Force
 
@@ -141,70 +166,4 @@ econ %>%
   ggplot(aes(date, labor_force_participation_rate)) +
   geom_line() +
   theme_som()
-```
-
-Local
-=======================================================================
-
-Row {.tabset}
------------------------------------------------------------------------
-
-### County Unemployment
-
-```{r state_compare}
-#### New Local Unemployment Variable ####
-
-unemp_local <- unemployment %>%
-  # remove na columns from counties
-  filter(!is.na(Wayne)) %>%
-  # create local avg variable
-  mutate(`Local Avg` = (Wayne + Kalamazoo + Saginaw + Ingham) / 4) %>%
-  # tidy!
-  gather(key = "Location", value = "unemp_rate", -date)
-
-unemp_local %>%
-  ggplot(aes(date, unemp_rate, color = Location)) +
-    geom_line() +
-    theme_som()
-```
-
-
-### Wayne
-
-```{r wayne}
-unemp_local %>%
-  filter(Location %in% c("MI", "US", "Wayne", "Local Avg")) %>%
-  ggplot(aes(date, unemp_rate, color = Location)) +
-    geom_line() +
-    theme_som()
-```
-
-### Kalamazoo
-
-```{r kalamazoo}
-unemp_local %>%
-  filter(Location %in% c("MI", "US", "Kalamazoo", "Local Avg")) %>%
-  ggplot(aes(date, unemp_rate, color = Location)) +
-    geom_line() +
-    theme_som()
-```
-
-### Saginaw
-
-```{r saginaw}
-unemp_local %>%
-  filter(Location %in% c("MI", "US", "Saginaw", "Local Avg")) %>%
-  ggplot(aes(date, unemp_rate, color = Location)) +
-    geom_line() +
-    theme_som()
-```
-
-### Ingham
-
-```{r ingham}
-unemp_local %>%
-  filter(Location %in% c("MI", "US", "Ingham", "Local Avg")) %>%
-  ggplot(aes(date, unemp_rate, color = Location)) +
-    geom_line() +
-    theme_som()
 ```
