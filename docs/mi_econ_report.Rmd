@@ -3,8 +3,8 @@ title: "MI Economic Indicator Report"
 author: "Justin Baker"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output:
-  html_notebook: default
   pdf_document: default
+  html_notebook: default
 ---
 ## Reporting Time!
 Now let's take everything we've learned and generate a report. But before we begin, a few notes.

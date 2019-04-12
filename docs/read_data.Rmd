@@ -60,7 +60,9 @@ str(laus_data)
 Find a dataset on a Socrata site, like https://www.dallasopendata.com/, and use RSocrata::read.socrata() to read it in.
 
 ```{r, eval = F}
-
+url <- "https://data.michigan.gov/Economy/Michigan-Per-Capita-Personal-Income/7frj-2rv6"
+mi_cap_data <- read.socrata(url)
+summary(mi_cap_data)
 ```
 
 ### Read Private Data with RSocrata: Example with Stellar Sea Lion Count
