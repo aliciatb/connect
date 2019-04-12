@@ -20,9 +20,9 @@ April 7-10, 2019
 - [Michigan Economic Dashboard](https://aliciatb.github.io/connect/mi_econ_dashboard.html)
 
 ## Visualizing your data, The Power of BI
-- [Power BI Report](https://app.powerbi.com/view?r=eyJrIjoiOGVkNmQ0YjctYzA3Mi00MTY5LWIyMzctNjJjNTkwYmI3ZjU1IiwidCI6IjdjYzVmMGY5LWVlNWItNDEwNi1hNjJkLTFiOWY3YmU0NjExOCIsImMiOjN9)
+- [Power BI Report](https://app.powerbi.com/view?r=eyJrIjoiOGVkNmQ0YjctYzA3Mi00MTY5LWIyMzctNjJjNTkwYmI3ZjU1IiwidCI6IjdjYzVmMGY5LWVlNWItNDEwNi1hNjJkLTFiOWY3YmU0NjExOCIsImMiOjN9) - as of 4/7/2019
 - [Public Asset Inventory View](https://data.seattle.gov/dataset/Seattle-Public-Dataset-Asset-Inventory/nymu-ywvk)
-- [Open Data BenchmarkeR](https://alicia.shinyapps.io/benchmarkeR/) - Compare public dataset metadata against all Socrata data portals
+- [Open Data BenchmarkeR](https://alicia.shinyapps.io/benchmarkeR/) - Compare public dataset metadata against all Socrata data portals powered by the [Discovery API](https://socratadiscovery.docs.apiary.io)
 
 # Presenters
 
