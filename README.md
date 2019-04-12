@@ -1,5 +1,7 @@
 ![Tyler Connect](https://github.com/aliciatb/connect/blob/master/images/connect_logo.png)
 
+April 7-10, 2019
+
 # Labs
 
 ## Create and Update Data with Python & APIs
@@ -18,7 +20,7 @@
 - [Michigan Economic Dashboard](https://aliciatb.github.io/connect/mi_econ_dashboard.html)
 
 ## Visualizing your data, The Power of BI
-- [Power BI Report](https://app.powerbi.com/reportEmbed?reportId=3e798ebf-93f0-4ca6-a2be-dc178b39fc48&autoAuth=true&ctid=7cc5f0f9-ee5b-4106-a62d-1b9f7be46118)
+- [Power BI Report](https://app.powerbi.com/view?r=eyJrIjoiOGVkNmQ0YjctYzA3Mi00MTY5LWIyMzctNjJjNTkwYmI3ZjU1IiwidCI6IjdjYzVmMGY5LWVlNWItNDEwNi1hNjJkLTFiOWY3YmU0NjExOCIsImMiOjN9)
 - [Public Asset Inventory View](https://data.seattle.gov/dataset/Seattle-Public-Dataset-Asset-Inventory/nymu-ywvk)
 - [Open Data BenchmarkeR](https://alicia.shinyapps.io/benchmarkeR/) - Compare public dataset metadata against all Socrata data portals
 
