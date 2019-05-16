@@ -31,12 +31,12 @@ library(lubridate)
 Run the chunk below to take a look at the dataset!
 
 ```{r rSocrataExample}
-fish_url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
+fish_url <- "https://michigan-scgc.data.socrata.com/Environment/Michigan-Fish/he9h-7fpa"
 rsocrata_data <- read.socrata(fish_url)
 
 rsocrata_data %>%
-  top_n(10, CommonName) %>%
-  mutate(Image = paste0("<image src='",Image,"'></image>")) %>%
+  top_n(10, commonname) %>%
+  mutate(Image = paste0("<image src='",imageurl,"'></image>")) %>%
   # setting escape to FALSE allows html to be rendered for the fish images!
   kable(escape = FALSE) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive")) %>%
