@@ -31,7 +31,7 @@ library(lubridate)
 Run the chunk below to take a look at the dataset!
 
 ```{r rSocrataExample}
-fish_url <- "https://michigan-scgc.data.socrata.com/Environment/Michigan-Fish/he9h-7fpa"
+fish_url <- "https://data.michigan.gov/Environment/Michigan-Fish/he9h-7fpa"
 rsocrata_data <- read.socrata(fish_url)
 
 rsocrata_data %>%
